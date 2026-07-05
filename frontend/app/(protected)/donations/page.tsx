@@ -1,3 +1,11 @@
+import DonationHeader from "@/components/donations/DonationHeader";
+import DonationList from "@/components/donations/DonationList";
+
 export default function DonationsPage() {
-    return <h1 className="text-3xl font-bold">Donaciones</h1>;
+    return (
+        <>
+            <DonationHeader />
+            <DonationList />
+        </>
+    );
 }
