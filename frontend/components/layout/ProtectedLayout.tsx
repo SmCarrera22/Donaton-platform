@@ -1,21 +1,24 @@
 import Sidebar from "./Sidebar";
 import TopNavbar from "./TopNavbar";
 
-interface Props {
+interface ProtectedLayoutProps {
     children: React.ReactNode;
 }
+
 export default function ProtectedLayout({
-                                            children
-                                        }: Props) {
+                                            children,
+                                        }: ProtectedLayoutProps) {
     return (
-        <div className="flex">
+        <div className="flex h-screen bg-gray-100">
             <Sidebar />
-            <main className="flex-1 min-h-screen bg-gray-50">
+
+            <div className="flex flex-1 flex-col">
                 <TopNavbar />
-                <div className="p-8">
+
+                <main className="flex-1 overflow-auto p-8">
                     {children}
-                </div>
-            </main>
+                </main>
+            </div>
         </div>
     );
 }

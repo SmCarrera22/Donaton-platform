@@ -1,75 +1,32 @@
 "use client";
 
-import Link from "next/link";
+import { Bell, LogOut } from "lucide-react";
 
-type Props = {
-    active?: "home" | "about" | "login" | "register";
-};
-
-export default function TopNavbar({ active }: Props) {
-    const activeStyle =
-        "rounded-lg bg-blue-600 px-4 py-2 text-sm font-bold text-white shadow-sm";
-
-    const normalStyle =
-        "rounded-md px-3 py-2 text-sm font-medium text-gray-600 transition hover:text-blue-600";
-
+export default function TopNavbar() {
     return (
-        <nav className="sticky top-0 z-50 border-b bg-white">
-            <div className="mx-auto flex max-w-7xl items-center justify-between px-8 py-4">
+        <header className="h-20 bg-white border-b flex items-center justify-between px-8 shadow-sm">
+            <div>
+                <h2 className="text-xl font-bold text-gray-800">
+                    Panel de Control
+                </h2>
+            </div>
 
-                <Link
-                    href="/"
-                    className="flex items-center gap-2"
-                >
-                    <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-600 font-bold text-white">
-                        D
+            <div className="flex items-center gap-6">
+                <button className="relative">
+                    <Bell className="text-gray-600" />
+                </button>
+
+                <div className="flex items-center gap-3">
+                    <div className="h-10 w-10 rounded-full bg-sky-600 flex items-center justify-center text-white font-bold">
+                        S
                     </div>
 
-                    <span className="text-xl font-bold tracking-tight text-gray-800">
-                        Donaton
-                    </span>
-                </Link>
-
-                <div className="flex items-center gap-8">
-
-                    <Link
-                        href="/about-us"
-                        className={
-                            active === "about"
-                                ? activeStyle
-                                : normalStyle
-                        }
-                    >
-                        Acerca de Nosotros
-                    </Link>
-
-                    <div className="h-6 w-px bg-gray-300" />
-
-                    <Link
-                        href="/login"
-                        className={
-                            active === "login"
-                                ? activeStyle
-                                : normalStyle
-                        }
-                    >
-                        Iniciar sesión
-                    </Link>
-
-                    <Link
-                        href="/register"
-                        className={
-                            active === "register"
-                                ? activeStyle
-                                : normalStyle
-                        }
-                    >
-                        Registrarse
-                    </Link>
-
+                    <button className="flex items-center gap-2 text-red-600 hover:text-red-700">
+                        <LogOut size={18} />
+                        Salir
+                    </button>
                 </div>
-
             </div>
-        </nav>
+        </header>
     );
 }
