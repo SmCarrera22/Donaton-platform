@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: ms-auth
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: ms-auth
+
+  template:
+
+    metadata:
+      labels:
+        app: ms-auth
+
+    spec:
+
+      containers:
+
+        - name: ms-auth
+
+          image: donaton-proyect-ms-auth:latest
+          imagePullPolicy: IfNotPresent
+
+          ports:
+            - containerPort: 8082

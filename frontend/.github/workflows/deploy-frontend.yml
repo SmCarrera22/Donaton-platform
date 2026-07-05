@@ -1,0 +1,40 @@
+name: Frontend CI
+
+on:
+  push:
+    branches:
+      - dev
+  pull_request:
+    branches:
+      - dev
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 8
+
+      # Quitamos el "cd frontend" porque ya estamos en la raíz del front
+      - name: Install, Test & Build
+        run: |
+          pnpm install --frozen-lockfile
+          pnpm test run
+          pnpm build
+
+      # Simplificamos el contexto de Docker a la raíz actual
+      - name: Docker Build
+        run: |
+          docker build \
+          -t donaton-frontend .

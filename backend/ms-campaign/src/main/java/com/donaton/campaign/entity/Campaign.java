@@ -1,0 +1,32 @@
+package com.donaton.campaign.entity;
+
+import jakarta.persistence.*;
+import lombok.*;
+
+import java.time.LocalDateTime;
+
+@Entity
+@Table(name = "campaign")
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class Campaign {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String title;
+    private String description;
+    private Integer goalAmount;
+    private Integer collectedAmount;
+
+    @Enumerated(EnumType.STRING)
+    private CampaignStatus status;
+
+    private LocalDateTime createdAt;
+    private LocalDateTime endDate;
+
+}

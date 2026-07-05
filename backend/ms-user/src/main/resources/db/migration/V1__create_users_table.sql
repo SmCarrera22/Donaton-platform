@@ -1,0 +1,12 @@
+CREATE TABLE users (
+    id BIGSERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(150) NOT NULL,
+    password VARCHAR(225) NOT NULL,
+    role VARCHAR(50) NOT NULL,
+    phone VARCHAR(30),
+    address VARCHAR(200),
+    region VARCHAR(100),
+    comuna VARCHAR(100),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

@@ -1,0 +1,104 @@
+services:
+
+  ms-user:
+    build:
+      context: ./backend/ms-user
+    container_name: ms-user
+    ports:
+      - "8081:8081"
+    environment:
+      DB_URL: jdbc:postgresql://ep-floral-heart-at7zindi-pooler.c-9.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require
+      DB_USER: neondb_owner
+      DB_PASSWORD: npg_JHz4sqPY3VFi
+    networks:
+      - donaton-network
+
+
+  ms-auth:
+    build:
+      context: ./backend/ms-auth
+    container_name: ms-auth
+    ports:
+      - "8082:8082"
+    networks:
+      - donaton-network
+
+
+  ms-donation:
+    build:
+      context: ./backend/ms-donation
+    container_name: ms-donation
+    ports:
+      - "8083:8083"
+    environment:
+      DB_URL: jdbc:postgresql://ep-fragrant-lake-advjty35-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require
+      DB_USER: neondb_owner
+      DB_PASSWORD: npg_3OfYicBZCjo9
+    networks:
+      - donaton-network
+
+
+  ms-campaign:
+    build:
+      context: ./backend/ms-campaign
+    container_name: ms-campaign
+    ports:
+      - "8084:8084"
+    environment:
+      DB_URL: jdbc:postgresql://ep-broad-wind-adghbtn0-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require
+      DB_USER: neondb_owner
+      DB_PASSWORD: npg_uX84jidoAbHM
+    networks:
+      - donaton-network
+
+
+  bff:
+    build:
+      context: ./backend/bff
+    container_name: bff
+    ports:
+      - "8080:8080"
+    environment:
+      AUTH_SERVICE_URL: http://ms-auth:8082
+      USER_SERVICE_URL: http://ms-user:8081
+      DONATION_SERVICE_URL: http://ms-donation:8083
+      CAMPAIGN_SERVICE_URL: http://ms-campaign:8084
+    depends_on:
+      - ms-auth
+      - ms-user
+      - ms-donation
+      - ms-campaign
+    networks:
+      - donaton-network
+
+
+  api-gateway:
+    build:
+      context: ./backend/api-gateway
+    container_name: api-gateway
+    ports:
+      - "8090:8090"
+    environment:
+      BFF_URL: http://bff:8080
+    depends_on:
+      - bff
+    networks:
+      - donaton-network
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: frontend
+    ports:
+      - "3000:3000"
+    environment:
+      API_GATEWAY_URL: http://api-gateway:8090
+    depends_on:
+      - api-gateway
+    networks:
+      - donaton-network
+
+
+networks:
+  donaton-network:
+    driver: bridge

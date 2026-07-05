@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: ms-donation
+
+spec:
+
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: ms-donation
+
+
+  template:
+
+    metadata:
+      labels:
+        app: ms-donation
+
+
+    spec:
+
+      containers:
+
+        - name: ms-donation
+
+          image: donaton-proyect-ms-donation:latest
+          imagePullPolicy: IfNotPresent
+
+          ports:
+
+            - containerPort: 8083

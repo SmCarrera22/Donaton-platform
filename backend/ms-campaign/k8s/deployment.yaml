@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: ms-campaign
+
+
+spec:
+
+  replicas: 1
+
+
+  selector:
+
+    matchLabels:
+      app: ms-campaign
+
+
+  template:
+
+    metadata:
+
+      labels:
+        app: ms-campaign
+
+
+    spec:
+
+      containers:
+
+        - name: ms-campaign
+
+          image: donaton-proyect-ms-campaign:latest
+          imagePullPolicy: IfNotPresent
+
+          ports:
+
+            - containerPort: 8084

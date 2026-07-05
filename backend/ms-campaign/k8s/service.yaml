@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Service
+
+metadata:
+  name: ms-campaign
+
+
+spec:
+
+  selector:
+    app: ms-campaign
+
+
+  ports:
+
+    - port: 8084
+      targetPort: 8084
+
+
+  type: ClusterIP
