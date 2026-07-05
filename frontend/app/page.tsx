@@ -51,7 +51,7 @@ export default function HomePage() {
                         ) : (
                             <div className="flex items-center gap-4">
                                 <span className="text-sm font-medium text-gray-700">
-                                    Hola, {loggedInUser.fullName}
+                                    Hola, {loggedInUser.email}
                                 </span>
                                 <button
                                     onClick={handleLogout}

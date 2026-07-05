@@ -1,5 +1,5 @@
 // app/about-us/page.tsx
-import TopNavbar from "@/components/layout/TopNavbar";
+import PublicNavbar from "@/components/layout/PublicNavbar";
 import { FeatureCard } from "@/components/features/FeatureCard";
 
 export default function AboutUsPage() {
@@ -15,7 +15,7 @@ export default function AboutUsPage() {
             </a>
 
             {/* Componente Global Extraído */}
-            <TopNavbar active={"about"}/>
+            <PublicNavbar active={"about"}/>
 
             <main id="main-content" role="main" aria-labelledby="about-heading" tabIndex={-1}>
                 {/* Sección Principal Informativa */}

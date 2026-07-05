@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { Heart, UserCircle } from "lucide-react";
 import { useRegisterForm } from "@/hooks/useRegisterForm";
-import TopNavbar from "@/components/layout/TopNavbar";
+import PublicNavbar from "@/components/layout/PublicNavbar";
 import PublicHero from "@/components/layout/PublicHero";
 
 export default function RegisterPage() {
@@ -18,7 +18,7 @@ export default function RegisterPage() {
                 Saltar al formulario de registro
             </a>
 
-            <TopNavbar active={"register"} />
+            <PublicNavbar active={"register"} />
 
             <PublicHero
                 title="Crea tu cuenta en Donaton"

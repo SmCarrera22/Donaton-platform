@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { Heart } from "lucide-react";
 import { useLoginForm } from "@/hooks/useLoginForm";
-import TopNavbar from "@/components/layout/TopNavbar";
+import PublicNavbar from "@/components/layout/PublicNavbar";
 import PublicHero from "@/components/layout/PublicHero";
 
 export default function LoginPage() {
@@ -27,7 +27,7 @@ export default function LoginPage() {
                 Saltar al formulario de inicio de sesión
             </a>
 
-            <TopNavbar active={"login"} />
+            <PublicNavbar active={"login"} />
 
             <PublicHero
                 title="Bienvenido a Donaton"

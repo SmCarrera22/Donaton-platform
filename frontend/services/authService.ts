@@ -1,9 +1,4 @@
-// services/authService.ts
 import { postToBff } from "@/lib/bff";
-
-// ==========================================
-// 1. TIPOS DE DATOS (MOLDE DE ENTRADA Y SALIDA)
-// ==========================================
 
 export type RegisterFormData = {
     fullName: string;
@@ -29,20 +24,13 @@ export type LoginCredentials = {
 };
 
 export type LoginResponse = {
-    success: boolean;
-    mensaje: string;
+    token: string;
 };
 
-// ==========================================
-// 2. SERVICIO CENTRALIZADO DE AUTENTICACIÓN
-// ==========================================
-
 export const authService = {
-    /**
-     * Envía los datos transformándolos al formato exacto del DTO UserCreateRequest de Java
-     */
-    register: async (formData: Omit<RegisterFormData, "confirmPassword" | "acceptTerms">) => {
-        // Mapeo Espejo hacia el DTO de Spring Boot
+    register: async (
+        formData: Omit<RegisterFormData, "confirmPassword" | "acceptTerms">
+    ) => {
         const userCreateRequest = {
             fullName: formData.fullName,
             email: formData.email,
@@ -50,16 +38,19 @@ export const authService = {
             phone: formData.phone,
             address: formData.address,
             region: formData.region,
-            comuna: formData.comuna
+            comuna: formData.comuna,
         };
 
-        return await postToBff<RegisterResponse>("/api/register", userCreateRequest);
+        return await postToBff<RegisterResponse>(
+            "/api/register",
+            userCreateRequest
+        );
     },
 
-    /**
-     * Envía las credenciales directamente hacia el BFF para iniciar sesión
-     */
     login: async (credentials: LoginCredentials) => {
-        return await postToBff<LoginResponse>("/api/login", credentials);
-    }
+        return await postToBff<LoginResponse>(
+            "/api/login",
+            credentials
+        );
+    },
 };
