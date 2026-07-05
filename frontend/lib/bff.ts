@@ -1,3 +1,5 @@
+import { getToken } from "@/lib/session";
+
 type JsonRecord = Record<string, unknown>;
 
 async function readResponseBody(response: Response): Promise<unknown> {
@@ -11,16 +13,19 @@ async function readResponseBody(response: Response): Promise<unknown> {
   return text.length > 0 ? text : null;
 }
 
-export async function postToBff<TResponse>(
-  path: string,
-  payload: JsonRecord,
+async function request<TResponse>(
+    path: string,
+    options: RequestInit = {}
 ): Promise<{ ok: boolean; status: number; body: TResponse | string | null }> {
+  const token = getToken();
+
   const response = await fetch(path, {
-    method: "POST",
+    ...options,
     headers: {
       "Content-Type": "application/json",
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      ...(options.headers ?? {}),
     },
-    body: JSON.stringify(payload),
   });
 
   const body = (await readResponseBody(response)) as TResponse | string | null;
@@ -32,13 +37,48 @@ export async function postToBff<TResponse>(
   };
 }
 
+export function getFromBff<TResponse>(path: string) {
+  return request<TResponse>(path, {
+    method: "GET",
+  });
+}
+
+export function postToBff<TResponse>(
+    path: string,
+    payload: JsonRecord
+) {
+  return request<TResponse>(path, {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+}
+
+export function putToBff<TResponse>(
+    path: string,
+    payload: JsonRecord
+) {
+  return request<TResponse>(path, {
+    method: "PUT",
+    body: JSON.stringify(payload),
+  });
+}
+
+export function deleteFromBff<TResponse>(path: string) {
+  return request<TResponse>(path, {
+    method: "DELETE",
+  });
+}
+
 export function extractErrorMessage(body: unknown, fallbackMessage: string) {
   if (typeof body === "string" && body.trim().length > 0) {
     return body;
   }
 
   if (body && typeof body === "object") {
-    const maybeMessage = (body as JsonRecord).message ?? (body as JsonRecord).mensaje;
+    const maybeMessage =
+        (body as JsonRecord).message ??
+        (body as JsonRecord).mensaje ??
+        (body as JsonRecord).error;
 
     if (typeof maybeMessage === "string" && maybeMessage.trim().length > 0) {
       return maybeMessage;
