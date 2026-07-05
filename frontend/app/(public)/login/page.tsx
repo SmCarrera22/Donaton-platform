@@ -28,7 +28,7 @@ export default function LoginPage() {
             {/* Navbar */}
             <nav className="sticky top-0 z-50 flex items-center justify-between border-b bg-white px-8 py-4">
                 <Link
-                    href="/"
+                    href="/public"
                     className="flex items-center gap-2 rounded-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700"
                     aria-label="Ir al inicio de Donaton"
                 >

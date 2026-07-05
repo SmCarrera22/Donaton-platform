@@ -18,7 +18,7 @@ export default function RegisterPage() {
 
             {/* Navbar */}
             <nav className="sticky top-0 z-50 flex items-center justify-between border-b bg-white px-8 py-4">
-                <Link href="/" className="flex items-center gap-2 rounded-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-700" aria-label="Ir al inicio de Donaton">
+                <Link href="/public" className="flex items-center gap-2 rounded-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-700" aria-label="Ir al inicio de Donaton">
                     <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600 font-bold text-white">D</div>
                     <span className="text-xl font-bold tracking-tight text-gray-800">Donaton</span>
                 </Link>
