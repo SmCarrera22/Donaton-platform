@@ -94,7 +94,7 @@ public class BackendGatewayService {
         AuthLoginRequest authRequest = new AuthLoginRequest(
                 userData.email(),
                 request.getPassword(),
-                userData.password(),
+                userData.passwordHash(),
                 userData.role()
         );
 
