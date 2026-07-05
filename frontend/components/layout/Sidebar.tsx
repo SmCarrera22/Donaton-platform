@@ -1,50 +1,62 @@
 "use client";
 
-import Link from "next/link";
-import { Home, User, HeartHandshake, FolderKanban } from "lucide-react";
+import {
+    LayoutDashboard,
+    HeartHandshake,
+    HandCoins,
+    User,
+} from "lucide-react";
 
-const links = [
-    {
-        href: "/dashboard",
-        label: "Dashboard",
-        icon: Home,
-    },
-    {
-        href: "/campaigns",
-        label: "Campañas",
-        icon: FolderKanban,
-    },
-    {
-        href: "/donations",
-        label: "Donaciones",
-        icon: HeartHandshake,
-    },
-    {
-        href: "/profile",
-        label: "Mi Perfil",
-        icon: User,
-    },
-];
+import MenuItem from "./MenuItem";
 
 export default function Sidebar() {
     return (
-        <aside className="w-64 bg-sky-700 text-white flex flex-col">
-            <div className="h-20 flex items-center justify-center border-b border-sky-600">
-                <h1 className="text-2xl font-bold">Donaton</h1>
+        <aside className="w-64 border-r bg-white h-screen sticky top-0 flex flex-col">
+
+            <div className="border-b p-6">
+
+                <h1 className="text-2xl font-bold text-sky-700">
+                    Donaton
+                </h1>
+
+                <p className="text-sm text-slate-500">
+                    Panel de usuario
+                </p>
+
             </div>
 
-            <nav className="flex-1 p-4 space-y-2">
-                {links.map(({ href, label, icon: Icon }) => (
-                    <Link
-                        key={href}
-                        href={href}
-                        className="flex items-center gap-3 rounded-lg px-4 py-3 hover:bg-sky-600 transition"
-                    >
-                        <Icon size={20} />
-                        {label}
-                    </Link>
-                ))}
+            <nav className="flex-1 space-y-2 p-4">
+
+                <MenuItem
+                    href="/dashboard"
+                    icon={<LayoutDashboard size={20} />}
+                >
+                    Dashboard
+                </MenuItem>
+
+                <MenuItem
+                    href="/campaigns"
+                    icon={<HeartHandshake size={20} />}
+                >
+                    Campañas
+                </MenuItem>
+
+                <MenuItem
+                    href="/donations"
+                    icon={<HandCoins size={20} />}
+                >
+                    Mis Donaciones
+                </MenuItem>
+
+                <MenuItem
+                    href="/profile"
+                    icon={<User size={20} />}
+                >
+                    Mi Perfil
+                </MenuItem>
+
             </nav>
+
         </aside>
     );
 }

@@ -4,29 +4,35 @@ import { Bell, LogOut } from "lucide-react";
 
 export default function TopNavbar() {
     return (
-        <header className="h-20 bg-white border-b flex items-center justify-between px-8 shadow-sm">
+        <header className="flex h-16 items-center justify-between border-b bg-white px-8">
+
             <div>
-                <h2 className="text-xl font-bold text-gray-800">
+
+                <h2 className="text-xl font-semibold">
                     Panel de Control
                 </h2>
+
             </div>
 
-            <div className="flex items-center gap-6">
-                <button className="relative">
-                    <Bell className="text-gray-600" />
+            <div className="flex items-center gap-4">
+
+                <button
+                    className="rounded-lg p-2 hover:bg-slate-100"
+                >
+                    <Bell size={20} />
                 </button>
 
-                <div className="flex items-center gap-3">
-                    <div className="h-10 w-10 rounded-full bg-sky-600 flex items-center justify-center text-white font-bold">
-                        S
-                    </div>
+                <button
+                    className="flex items-center gap-2 rounded-lg border px-3 py-2 hover:bg-slate-100"
+                >
+                    <LogOut size={18} />
 
-                    <button className="flex items-center gap-2 text-red-600 hover:text-red-700">
-                        <LogOut size={18} />
-                        Salir
-                    </button>
-                </div>
+                    Cerrar sesión
+
+                </button>
+
             </div>
+
         </header>
     );
 }
