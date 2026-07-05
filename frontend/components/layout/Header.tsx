@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 
-export default function PublicHeader() {
+export default function Header() {
     return (
         <header className="bg-white border-b shadow-sm">
             <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
