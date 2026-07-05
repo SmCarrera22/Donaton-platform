@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { Heart, UserCircle } from "lucide-react";
 import { useRegisterForm } from "@/hooks/useRegisterForm";
+import TopNavbar from "@/components/layout/TopNavbar";
 
 export default function RegisterPage() {
     const { formData, errors, statusMessage, isSubmitted, handleChange, handleSubmit } = useRegisterForm();
@@ -16,27 +17,7 @@ export default function RegisterPage() {
                 Saltar al formulario de registro
             </a>
 
-            {/* Navbar */}
-            <nav className="sticky top-0 z-50 flex items-center justify-between border-b bg-white px-8 py-4">
-                <Link href="/public" className="flex items-center gap-2 rounded-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-700" aria-label="Ir al inicio de Donaton">
-                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600 font-bold text-white">D</div>
-                    <span className="text-xl font-bold tracking-tight text-gray-800">Donaton</span>
-                </Link>
-                <div className="flex items-center gap-6">
-                    <div className="hidden gap-6 text-sm font-medium text-gray-600 md:flex">
-                        <a href="/about-us" className="transition hover:text-blue-600">Acerca de Nosotros</a>
-                    </div>
-                    <div className="flex items-center gap-3 border-l pl-6">
-                        <Link href="/login" className="rounded-md px-3 py-2 text-sm font-medium text-gray-600 transition hover:text-blue-600">
-                            Iniciar sesión
-                        </Link>
-                        <span className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-bold text-white shadow-sm" aria-current="page">
-                            <UserCircle size={18} aria-hidden="true" />
-                            Registrarse
-                        </span>
-                    </div>
-                </div>
-            </nav>
+            <TopNavbar active={"register"} />
 
             {/* Hero Section */}
             <section className="relative bg-blue-600 px-6 py-16 text-white">
