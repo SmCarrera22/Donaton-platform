@@ -1,6 +1,5 @@
 // app/about-us/page.tsx
-import { Header } from "@/components/ui/Header";
-import { Footer } from "@/components/ui/Footer";
+import TopNavbar from "@/components/layout/TopNavbar";
 import { FeatureCard } from "@/components/features/FeatureCard";
 
 export default function AboutUsPage() {
@@ -16,7 +15,7 @@ export default function AboutUsPage() {
             </a>
 
             {/* Componente Global Extraído */}
-            <Header />
+            <TopNavbar active={"about"}/>
 
             <main id="main-content" role="main" aria-labelledby="about-heading" tabIndex={-1}>
                 {/* Sección Principal Informativa */}
@@ -72,9 +71,6 @@ export default function AboutUsPage() {
                     <p className="mt-2 text-gray-700">Escríbenos a <a href="mailto:info@donatonproyect.org" className="text-sky-600 underline">info@donatonproyect.org</a></p>
                 </section>
             </main>
-
-            {/* Componente Global Extraído */}
-            <Footer />
         </div>
     );
 }
