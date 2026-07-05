@@ -1,29 +1,20 @@
-import { useState, useEffect } from "react";
-import { clearCurrentSessionUser, getCurrentSessionUser } from "@/lib/session";
-
-export type LoggedInUser = {
-    fullName: string;
-    email: string;
-    createdAt: string;
-};
+import { useEffect, useState } from "react";
+import { clearSession, getSession } from "@/lib/session";
 
 export function useHomeSession() {
-    const [loggedInUser, setLoggedInUser] = useState<LoggedInUser | null>(null);
+    const [loggedInUser, setLoggedInUser] = useState(getSession());
 
     useEffect(() => {
-        const currentSession = getCurrentSessionUser();
-        if (currentSession) {
-            setLoggedInUser(currentSession);
-        }
+        setLoggedInUser(getSession());
     }, []);
 
     const handleLogout = () => {
-        clearCurrentSessionUser();
+        clearSession();
         setLoggedInUser(null);
     };
 
     return {
         loggedInUser,
-        handleLogout
+        handleLogout,
     };
 }

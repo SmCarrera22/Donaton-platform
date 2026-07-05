@@ -1,37 +1,36 @@
-export type SessionUser = {
-  fullName: string;
-  email: string;
-  createdAt: string;
-};
+import type { AuthSession } from "@/types/user";
 
-let currentSessionUser: SessionUser | null = null;
-let rememberedUsers: SessionUser[] = [];
+const SESSION_KEY = "donaton_session";
 
-export function getCurrentSessionUser() {
-  return currentSessionUser;
+export function saveSession(session: AuthSession) {
+  if (typeof window === "undefined") return;
+  sessionStorage.setItem(SESSION_KEY, JSON.stringify(session));
 }
 
-export function setCurrentSessionUser(user: SessionUser) {
-  currentSessionUser = user;
+export function getSession(): AuthSession | null {
+  if (typeof window === "undefined") return null;
+
+  const rawSession = sessionStorage.getItem(SESSION_KEY);
+
+  if (!rawSession) return null;
+
+  try {
+    return JSON.parse(rawSession) as AuthSession;
+  } catch {
+    clearSession();
+    return null;
+  }
 }
 
-export function clearCurrentSessionUser() {
-  currentSessionUser = null;
+export function clearSession() {
+  if (typeof window === "undefined") return;
+  sessionStorage.removeItem(SESSION_KEY);
 }
 
-export function rememberUser(user: SessionUser) {
-  const normalizedEmail = user.email.toLowerCase();
-  const nextUsers = rememberedUsers.filter(
-    (storedUser) => storedUser.email.toLowerCase() !== normalizedEmail,
-  );
-
-  rememberedUsers = [...nextUsers, user];
+export function getToken() {
+  return getSession()?.token ?? null;
 }
 
-export function findRememberedUserByEmail(email: string) {
-  return rememberedUsers.find((user) => user.email.toLowerCase() === email.toLowerCase()) ?? null;
+export function isAuthenticated() {
+  return Boolean(getToken());
 }
-
-// Fallback anterior con localStorage:
-// window.localStorage.setItem("donaton_session", JSON.stringify(user));
-// window.localStorage.getItem("donaton_session");
