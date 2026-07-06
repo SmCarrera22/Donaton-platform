@@ -4,7 +4,8 @@ import type { Campaign } from "@/types/campaign";
 export type CampaignRequest = {
     title: string;
     description: string;
-    goal: number;
+    goalAmount: number;
+    endDate: string | null;
 };
 
 export const campaignService = {
