@@ -9,24 +9,25 @@ interface Props {
 }
 
 export default function CampaignForm({ onCampaignCreated }: Props) {
-    const [name, setName] = useState("");
+    const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
-    const [targetAmount, setTargetAmount] = useState("");
-    const [status, setStatus] = useState("ACTIVA");
+    const [goalAmount, setGoalAmount] = useState("");
+    const [endDate, setEndDate] = useState("");
     const [message, setMessage] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+
         setMessage("");
         setIsSubmitting(true);
 
         try {
             const response = await campaignService.create({
-                name,
+                title,
                 description,
-                targetAmount: Number(targetAmount),
-                status,
+                goalAmount: Number(goalAmount),
+                endDate: endDate ? `${endDate}T23:59:59` : null,
             });
 
             if (!response.ok) {
@@ -39,10 +40,10 @@ export default function CampaignForm({ onCampaignCreated }: Props) {
                 return;
             }
 
-            setName("");
+            setTitle("");
             setDescription("");
-            setTargetAmount("");
-            setStatus("ACTIVA");
+            setGoalAmount("");
+            setEndDate("");
             setMessage("Campaña creada correctamente.");
             onCampaignCreated();
         } catch {
@@ -60,21 +61,28 @@ export default function CampaignForm({ onCampaignCreated }: Props) {
 
             <form onSubmit={handleSubmit} className="mt-6 grid gap-4 md:grid-cols-2">
                 <input
-                    value={name}
-                    onChange={(event) => setName(event.target.value)}
-                    placeholder="Nombre de la campaña"
+                    value={title}
+                    onChange={(event) => setTitle(event.target.value)}
+                    placeholder="Título de la campaña"
                     className="rounded-lg border px-4 py-3 text-slate-800 placeholder:text-slate-500"
                     required
                 />
 
                 <input
-                    value={targetAmount}
-                    onChange={(event) => setTargetAmount(event.target.value)}
+                    value={goalAmount}
+                    onChange={(event) => setGoalAmount(event.target.value)}
                     placeholder="Meta de recaudación"
                     type="number"
                     min="1"
                     className="rounded-lg border px-4 py-3 text-slate-800 placeholder:text-slate-500"
                     required
+                />
+
+                <input
+                    value={endDate}
+                    onChange={(event) => setEndDate(event.target.value)}
+                    type="date"
+                    className="rounded-lg border px-4 py-3 text-slate-800 placeholder:text-slate-500"
                 />
 
                 <textarea
@@ -84,15 +92,6 @@ export default function CampaignForm({ onCampaignCreated }: Props) {
                     className="rounded-lg border px-4 py-3 text-slate-800 placeholder:text-slate-500 md:col-span-2"
                     required
                 />
-
-                <select
-                    value={status}
-                    onChange={(event) => setStatus(event.target.value)}
-                    className="rounded-lg border px-4 py-3 text-slate-800"
-                >
-                    <option value="ACTIVA">Activa</option>
-                    <option value="FINALIZADA">Finalizada</option>
-                </select>
 
                 <button
                     type="submit"
