@@ -4,33 +4,27 @@ interface Props {
     donation: Donation;
 }
 
-function formatCurrency(value?: number) {
-    if (value === undefined || value === null) return "$0";
-
-    return new Intl.NumberFormat("es-CL", {
-        style: "currency",
-        currency: "CLP",
-        maximumFractionDigits: 0,
-    }).format(value);
+function formatDate(value?: string) {
+    if (!value) return "Fecha no disponible";
+    return value.split("T")[0];
 }
 
 export default function DonationItem({ donation }: Props) {
-    const title =
-        donation.campaignTitle ??
-        `Campaña ID ${donation.campaignId ?? "sin asignar"}`;
-
-    const amount = donation.amount ?? donation.quantity ?? 0;
+    const resourceName =
+        donation.resourceName ??
+        donation.description ??
+        "Recurso no informado";
 
     return (
         <div className="rounded-xl border bg-white p-5 shadow-sm">
             <div className="flex items-center justify-between gap-6">
                 <div>
                     <h3 className="text-lg font-semibold text-slate-800">
-                        {title}
+                        {resourceName}
                     </h3>
 
                     <p className="mt-1 text-sm text-slate-500">
-                        Donante: {donation.donorName ?? donation.donorEmail ?? "No informado"}
+                        Tipo de recurso: {donation.resourceType ?? "No informado"}
                     </p>
 
                     <p className="mt-2 text-sm text-slate-500">
@@ -43,15 +37,15 @@ export default function DonationItem({ donation }: Props) {
 
                 <div className="text-right">
                     <p className="text-sm text-slate-500">
-                        Aporte
+                        Cantidad
                     </p>
 
                     <p className="text-xl font-bold text-slate-800">
-                        {formatCurrency(amount)}
+                        {donation.quantity ?? 0}
                     </p>
 
                     <p className="text-sm text-slate-500">
-                        {donation.createdAt ?? "Fecha no disponible"}
+                        {formatDate(donation.createdAt)}
                     </p>
                 </div>
             </div>

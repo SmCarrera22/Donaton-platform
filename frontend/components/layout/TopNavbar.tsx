@@ -15,19 +15,24 @@ export default function TopNavbar() {
     return (
         <header className="flex h-16 items-center justify-between border-b bg-white px-8">
             <div>
-                <h2 className="text-xl font-semibold">
+                <h2 className="text-xl font-bold text-slate-900">
                     Panel de Control
                 </h2>
             </div>
 
             <div className="flex items-center gap-4">
-                <button className="rounded-lg p-2 hover:bg-slate-100">
+                <button
+                    type="button"
+                    className="rounded-lg border border-slate-300 p-2 text-slate-900 transition hover:bg-slate-100"
+                    aria-label="Notificaciones"
+                >
                     <Bell size={20} />
                 </button>
 
                 <button
+                    type="button"
                     onClick={handleLogout}
-                    className="flex items-center gap-2 rounded-lg border px-3 py-2 hover:bg-slate-100"
+                    className="flex items-center gap-2 rounded-lg bg-sky-600 px-4 py-2 font-semibold text-white transition hover:bg-sky-700"
                 >
                     <LogOut size={18} />
                     Cerrar sesión

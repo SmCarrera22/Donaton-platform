@@ -8,23 +8,25 @@ interface Props {
     onDonationCreated: () => void;
 }
 
+const TEMP_DONOR_ID = 1;
+
 export default function DonationForm({ onDonationCreated }: Props) {
-    const [donorId, setDonorId] = useState("1");
     const [resourceName, setResourceName] = useState("");
     const [quantity, setQuantity] = useState("");
-    const [resourceType, setResourceType] = useState("MONEY");
-    const [donorType, setDonorType] = useState("PERSON");
+    const [resourceType, setResourceType] = useState("ALIMENTOS");
+    const [donorType, setDonorType] = useState("PERSONA");
     const [message, setMessage] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+
         setMessage("");
         setIsSubmitting(true);
 
         try {
             const response = await donationService.create({
-                donorId: Number(donorId),
+                donorId: TEMP_DONOR_ID,
                 resourceName,
                 quantity: Number(quantity),
                 resourceType,
@@ -43,6 +45,9 @@ export default function DonationForm({ onDonationCreated }: Props) {
 
             setResourceName("");
             setQuantity("");
+            setResourceType("ALIMENTOS");
+            setDonorType("PERSONA");
+
             setMessage("Donación registrada correctamente.");
             onDonationCreated();
         } catch {
@@ -60,20 +65,10 @@ export default function DonationForm({ onDonationCreated }: Props) {
 
             <form onSubmit={handleSubmit} className="mt-6 grid gap-4 md:grid-cols-2">
                 <input
-                    value={donorId}
-                    onChange={(event) => setDonorId(event.target.value)}
-                    placeholder="ID del donante"
-                    type="number"
-                    min="1"
-                    className="rounded-lg border px-4 py-3"
-                    required
-                />
-
-                <input
                     value={resourceName}
                     onChange={(event) => setResourceName(event.target.value)}
                     placeholder="Nombre del recurso"
-                    className="rounded-lg border px-4 py-3"
+                    className="rounded-lg border px-4 py-3 text-slate-800 placeholder:text-slate-500"
                     required
                 />
 
@@ -83,28 +78,27 @@ export default function DonationForm({ onDonationCreated }: Props) {
                     placeholder="Cantidad"
                     type="number"
                     min="1"
-                    className="rounded-lg border px-4 py-3"
+                    className="rounded-lg border px-4 py-3 text-slate-800 placeholder:text-slate-500"
                     required
                 />
 
                 <select
                     value={resourceType}
                     onChange={(event) => setResourceType(event.target.value)}
-                    className="rounded-lg border px-4 py-3"
+                    className="rounded-lg border px-4 py-3 text-slate-800"
                 >
-                    <option value="MONEY">Dinero</option>
-                    <option value="FOOD">Alimentos</option>
-                    <option value="CLOTHES">Ropa</option>
-                    <option value="OTHER">Otro</option>
+                    <option value="ALIMENTOS">Alimentos</option>
+                    <option value="ROPA">Ropa</option>
+                    <option value="INSUMOS_MEDICOS">Insumos Médicos</option>
                 </select>
 
                 <select
                     value={donorType}
                     onChange={(event) => setDonorType(event.target.value)}
-                    className="rounded-lg border px-4 py-3"
+                    className="rounded-lg border px-4 py-3 text-slate-800"
                 >
-                    <option value="PERSON">Persona</option>
-                    <option value="COMPANY">Empresa</option>
+                    <option value="PERSONA">Persona</option>
+                    <option value="EMPRESA">Empresa</option>
                 </select>
 
                 <button

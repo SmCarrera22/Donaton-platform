@@ -1,4 +1,4 @@
-interface Props {
+interface StatsCardProps {
     title: string;
     value: string;
     subtitle: string;
@@ -8,18 +8,20 @@ export default function StatsCard({
                                       title,
                                       value,
                                       subtitle,
-                                  }: Props) {
+                                  }: StatsCardProps) {
     return (
-        <div className="rounded-xl bg-white p-6 shadow-sm">
-            <p className="text-sm text-slate-500">
+        <article className="rounded-xl border bg-white p-6 shadow-sm">
+            <p className="text-sm font-semibold text-slate-700">
                 {title}
             </p>
-            <h2 className="mt-3 text-3xl font-bold">
+
+            <p className="mt-3 text-3xl font-bold text-sky-700">
                 {value}
-            </h2>
-            <p className="text-sm text-slate-500">
+            </p>
+
+            <p className="mt-2 text-sm font-medium text-slate-600">
                 {subtitle}
             </p>
-        </div>
+        </article>
     );
 }
