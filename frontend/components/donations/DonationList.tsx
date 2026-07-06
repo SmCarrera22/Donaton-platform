@@ -1,36 +1,55 @@
-import DonationItem from "./DonationItem";
+"use client";
 
-const donations = [
-    {
-        campaignTitle: "Ayuda Escolar",
-        amount: "$25.000",
-        status: "Completada",
-        createdAt: "12/07/2026",
-    },
-    {
-        campaignTitle: "Comedor Solidario",
-        amount: "$15.000",
-        status: "Completada",
-        createdAt: "18/07/2026",
-    },
-    {
-        campaignTitle: "Mascotas Abandonadas",
-        amount: "$10.000",
-        status: "Pendiente",
-        createdAt: "21/07/2026",
-    },
-];
+import DonationItem from "./DonationItem";
+import { useDonations } from "@/hooks/useDonations";
 
 export default function DonationList() {
+    const {
+        donations,
+        isLoading,
+        errorMessage,
+        reloadDonations,
+    } = useDonations();
+
+    if (isLoading) {
+        return (
+            <section className="rounded-xl border bg-white p-6 text-slate-600">
+                Cargando donaciones...
+            </section>
+        );
+    }
+
+    if (errorMessage) {
+        return (
+            <section className="rounded-xl border border-red-200 bg-red-50 p-6">
+                <p className="font-medium text-red-700">
+                    {errorMessage}
+                </p>
+
+                <button
+                    onClick={reloadDonations}
+                    className="mt-4 rounded-lg bg-red-600 px-4 py-2 text-white hover:bg-red-700"
+                >
+                    Reintentar
+                </button>
+            </section>
+        );
+    }
+
+    if (donations.length === 0) {
+        return (
+            <section className="rounded-xl border bg-white p-6 text-slate-600">
+                No hay donaciones registradas.
+            </section>
+        );
+    }
+
     return (
         <section className="space-y-5">
             {donations.map((donation) => (
                 <DonationItem
-                    key={`${donation.campaignTitle}-${donation.createdAt}`}
-                    campaignTitle={donation.campaignTitle}
-                    amount={donation.amount}
-                    status={donation.status}
-                    createdAt={donation.createdAt}
+                    key={donation.id}
+                    donation={donation}
                 />
             ))}
         </section>

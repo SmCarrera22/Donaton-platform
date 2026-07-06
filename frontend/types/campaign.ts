@@ -1,8 +1,11 @@
 export interface Campaign {
     id: number;
-    title: string;
+    name?: string;
+    title?: string;
     description: string;
-    goal: number;
-    collected: number;
-    status: "ACTIVE" | "FINISHED";
+    goal?: number;
+    targetAmount?: number;
+    collected?: number;
+    currentAmount?: number;
+    status: string;
 }

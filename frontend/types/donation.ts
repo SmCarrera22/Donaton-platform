@@ -1,7 +1,13 @@
 export interface Donation {
     id: number;
-    campaignTitle: string;
-    amount: number;
-    status: "PENDING" | "COMPLETED" | "CANCELLED";
-    createdAt: string;
+    campaignId?: number;
+    campaignTitle?: string;
+    donorName?: string;
+    donorEmail?: string;
+    amount?: number;
+    quantity?: number;
+    resourceType?: string;
+    donorType?: string;
+    status: string;
+    createdAt?: string;
 }
