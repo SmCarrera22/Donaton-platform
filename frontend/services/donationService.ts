@@ -2,9 +2,9 @@ import { getFromBff, postToBff } from "@/lib/bff";
 import type { Donation } from "@/types/donation";
 
 export type DonationRequest = {
-    donorName: string;
-    donorEmail: string;
-    amount: number;
+    donorId: number;
+    resourceName: string;
+    quantity: number;
     resourceType: string;
     donorType: string;
 };

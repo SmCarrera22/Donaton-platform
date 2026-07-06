@@ -9,9 +9,9 @@ interface Props {
 }
 
 export default function DonationForm({ onDonationCreated }: Props) {
-    const [donorName, setDonorName] = useState("");
-    const [donorEmail, setDonorEmail] = useState("");
-    const [amount, setAmount] = useState("");
+    const [donorId, setDonorId] = useState("1");
+    const [resourceName, setResourceName] = useState("");
+    const [quantity, setQuantity] = useState("");
     const [resourceType, setResourceType] = useState("MONEY");
     const [donorType, setDonorType] = useState("PERSON");
     const [message, setMessage] = useState("");
@@ -24,9 +24,9 @@ export default function DonationForm({ onDonationCreated }: Props) {
 
         try {
             const response = await donationService.create({
-                donorName,
-                donorEmail,
-                amount: Number(amount),
+                donorId: Number(donorId),
+                resourceName,
+                quantity: Number(quantity),
                 resourceType,
                 donorType,
             });
@@ -41,11 +41,8 @@ export default function DonationForm({ onDonationCreated }: Props) {
                 return;
             }
 
-            setDonorName("");
-            setDonorEmail("");
-            setAmount("");
-            setResourceType("MONEY");
-            setDonorType("PERSON");
+            setResourceName("");
+            setQuantity("");
             setMessage("Donación registrada correctamente.");
             onDonationCreated();
         } catch {
@@ -63,26 +60,27 @@ export default function DonationForm({ onDonationCreated }: Props) {
 
             <form onSubmit={handleSubmit} className="mt-6 grid gap-4 md:grid-cols-2">
                 <input
-                    value={donorName}
-                    onChange={(event) => setDonorName(event.target.value)}
-                    placeholder="Nombre del donante"
+                    value={donorId}
+                    onChange={(event) => setDonorId(event.target.value)}
+                    placeholder="ID del donante"
+                    type="number"
+                    min="1"
                     className="rounded-lg border px-4 py-3"
                     required
                 />
 
                 <input
-                    value={donorEmail}
-                    onChange={(event) => setDonorEmail(event.target.value)}
-                    placeholder="Correo del donante"
-                    type="email"
+                    value={resourceName}
+                    onChange={(event) => setResourceName(event.target.value)}
+                    placeholder="Nombre del recurso"
                     className="rounded-lg border px-4 py-3"
                     required
                 />
 
                 <input
-                    value={amount}
-                    onChange={(event) => setAmount(event.target.value)}
-                    placeholder="Monto"
+                    value={quantity}
+                    onChange={(event) => setQuantity(event.target.value)}
+                    placeholder="Cantidad"
                     type="number"
                     min="1"
                     className="rounded-lg border px-4 py-3"
