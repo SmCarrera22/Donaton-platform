@@ -60,6 +60,17 @@ public class UserController {
     }
 
     @Operation(
+            summary = "Buscar usuario por email",
+            description = "Obtiene información pública del usuario mediante email"
+    )
+    @GetMapping("/email/{email}")
+    public UserResponse findByEmail(
+            @PathVariable String email
+    ) {
+        return service.findByEmail(email);
+    }
+
+    @Operation(
             summary = "Actualizar usuario",
             description = "Actualiza información del usuario"
     )

@@ -122,6 +122,35 @@ public class BackendGatewayService {
         );
     }
 
+    public ResponseEntity<Object> getCurrentUser(String authorization) {
+        ResponseEntity<Object> validateResponse = validateToken(authorization);
+
+        Object body = validateResponse.getBody();
+
+        if (!(body instanceof Map<?, ?> responseBody)) {
+            throw new RuntimeException("Respuesta inválida del servicio de autenticación");
+        }
+
+        Object valid = responseBody.get("valid");
+        Object email = responseBody.get("email");
+
+        if (!(Boolean.TRUE.equals(valid)) || email == null) {
+            throw new RuntimeException("Token inválido o usuario no autenticado");
+        }
+
+        String url = UriComponentsBuilder
+                .fromUriString(userServiceUrl)
+                .path("/users/email/{email}")
+                .buildAndExpand(email.toString())
+                .toUriString();
+
+        return exchange(
+                url,
+                HttpMethod.GET,
+                null
+        );
+    }
+
     private ResponseEntity<Object> exchange(
             String url,
             HttpMethod method,

@@ -36,6 +36,13 @@ public class BffController {
         return backendGatewayService.getUserById(id);
     }
 
+    @GetMapping("/users/me")
+    public ResponseEntity<Object> getCurrentUser(
+            @RequestHeader("Authorization") String authorization
+    ) {
+        return backendGatewayService.getCurrentUser(authorization);
+    }
+
     @PostMapping("/validate")
     public ResponseEntity<Object> validate(
             @RequestHeader("Authorization")
