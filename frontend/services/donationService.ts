@@ -2,8 +2,11 @@ import { getFromBff, postToBff } from "@/lib/bff";
 import type { Donation } from "@/types/donation";
 
 export type DonationRequest = {
-    campaignId: number;
+    donorName: string;
+    donorEmail: string;
     amount: number;
+    resourceType: string;
+    donorType: string;
 };
 
 export const donationService = {
