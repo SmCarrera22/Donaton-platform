@@ -2,9 +2,10 @@ import { getFromBff, postToBff } from "@/lib/bff";
 import type { Campaign } from "@/types/campaign";
 
 export type CampaignRequest = {
-    title: string;
+    name: string;
     description: string;
-    goal: number;
+    targetAmount: number;
+    status: string;
 };
 
 export const campaignService = {
