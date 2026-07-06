@@ -1,28 +1,72 @@
+"use client";
+
+import { useProfile } from "@/hooks/useProfile";
+
 export default function ProfileCard() {
+    const {
+        profile,
+        isLoading,
+        errorMessage,
+        reloadProfile,
+    } = useProfile();
+
+    if (isLoading) {
+        return (
+            <section className="rounded-xl border bg-white p-6 text-slate-600">
+                Cargando perfil...
+            </section>
+        );
+    }
+
+    if (errorMessage) {
+        return (
+            <section className="rounded-xl border border-red-200 bg-red-50 p-6">
+                <p className="font-medium text-red-700">
+                    {errorMessage}
+                </p>
+
+                <button
+                    onClick={reloadProfile}
+                    className="mt-4 rounded-lg bg-red-600 px-4 py-2 text-white hover:bg-red-700"
+                >
+                    Reintentar
+                </button>
+            </section>
+        );
+    }
+
+    if (!profile) {
+        return (
+            <section className="rounded-xl border bg-white p-6 text-slate-600">
+                No se encontró información del usuario.
+            </section>
+        );
+    }
+
     return (
         <section className="rounded-xl border bg-white p-6 shadow-sm">
             <div className="mb-6 flex items-center gap-4">
                 <div className="flex h-16 w-16 items-center justify-center rounded-full bg-sky-600 text-2xl font-bold text-white">
-                    S
+                    {profile.name?.charAt(0).toUpperCase() ?? "U"}
                 </div>
 
                 <div>
                     <h2 className="text-xl font-bold text-slate-800">
-                        Usuario Donaton
+                        {profile.name}
                     </h2>
 
                     <p className="text-sm text-slate-500">
-                        usuario@donaton.cl
+                        {profile.email}
                     </p>
                 </div>
             </div>
 
             <div className="grid gap-4 md:grid-cols-2">
-                <ProfileField label="Rol" value="USER" />
-                <ProfileField label="Teléfono" value="+56 9 1234 5678" />
-                <ProfileField label="Región" value="Metropolitana" />
-                <ProfileField label="Comuna" value="Santiago" />
-                <ProfileField label="Dirección" value="Av. Siempre Viva 742" />
+                <ProfileField label="Rol" value={profile.role} />
+                <ProfileField label="Teléfono" value={profile.phone ?? "No informado"} />
+                <ProfileField label="Región" value={profile.region ?? "No informada"} />
+                <ProfileField label="Comuna" value={profile.comuna ?? "No informada"} />
+                <ProfileField label="Dirección" value={profile.address ?? "No informada"} />
             </div>
         </section>
     );
