@@ -1,54 +1,71 @@
 import type { Donation } from "@/types/donation";
 
-interface Props {
+type Props = {
     donation: Donation;
-}
+};
 
-function formatDate(value?: string) {
-    if (!value) return "Fecha no disponible";
+function formatDate(value?: string | null) {
+    if (!value) return "Sin fecha";
     return value.split("T")[0];
 }
 
 export default function DonationItem({ donation }: Props) {
-    const resourceName =
-        donation.resourceName ??
-        donation.description ??
-        "Recurso no informado";
+    const resourceName = donation.description ?? "Recurso no informado";
 
     return (
-        <div className="rounded-xl border bg-white p-5 shadow-sm">
-            <div className="flex items-center justify-between gap-6">
+        <article className="rounded-xl border bg-white p-5 shadow-sm">
+            <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
                 <div>
-                    <h3 className="text-lg font-semibold text-slate-800">
+                    <h3 className="text-lg font-bold text-slate-900">
                         {resourceName}
                     </h3>
 
-                    <p className="mt-1 text-sm text-slate-500">
-                        Tipo de recurso: {donation.resourceType ?? "No informado"}
-                    </p>
-
-                    <p className="mt-2 text-sm text-slate-500">
-                        Estado:
-                        <span className="ml-2 font-medium text-sky-700">
-                            {donation.status}
-                        </span>
+                    <p className="mt-2 text-sm text-slate-700">
+                        Tipo de recurso: {donation.resourceType}
                     </p>
                 </div>
 
-                <div className="text-right">
-                    <p className="text-sm text-slate-500">
-                        Cantidad
-                    </p>
-
-                    <p className="text-xl font-bold text-slate-800">
-                        {donation.quantity ?? 0}
-                    </p>
-
-                    <p className="text-sm text-slate-500">
-                        {formatDate(donation.createdAt)}
-                    </p>
-                </div>
+                <span className="w-fit rounded-full bg-sky-100 px-3 py-1 text-xs font-bold text-sky-700">
+                    {donation.status}
+                </span>
             </div>
+
+            <div className="mt-5 grid gap-4 md:grid-cols-3">
+                <DonationMetric
+                    label="Cantidad"
+                    value={String(donation.quantity)}
+                />
+
+                <DonationMetric
+                    label="Tipo de donante"
+                    value={donation.donorType}
+                />
+
+                <DonationMetric
+                    label="Fecha"
+                    value={formatDate(donation.createdAt)}
+                />
+            </div>
+        </article>
+    );
+}
+
+function DonationMetric({
+    label,
+    value,
+}: {
+    label: string;
+    value: string;
+}) {
+    return (
+        <div className="rounded-lg bg-slate-50 p-4">
+            <p className="text-xs font-semibold uppercase tracking-wide text-slate-600">
+                {label}
+            </p>
+
+            <p className="mt-1 font-bold text-slate-900">
+                {value}
+            </p>
         </div>
     );
 }
