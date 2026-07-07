@@ -1,27 +1,29 @@
-interface StatsCardProps {
+type StatsCardProps = {
     title: string;
-    value: string;
-    subtitle: string;
-}
+    value: string | number;
+    description?: string;
+};
 
 export default function StatsCard({
                                       title,
                                       value,
-                                      subtitle,
+                                      description,
                                   }: StatsCardProps) {
     return (
-        <article className="rounded-xl border bg-white p-6 shadow-sm">
+        <article className="rounded-xl border bg-white p-5 shadow-sm">
             <p className="text-sm font-semibold text-slate-700">
                 {title}
             </p>
 
-            <p className="mt-3 text-3xl font-bold text-sky-700">
+            <p className="mt-2 text-3xl font-bold text-sky-700">
                 {value}
             </p>
 
-            <p className="mt-2 text-sm font-medium text-slate-600">
-                {subtitle}
-            </p>
+            {description && (
+                <p className="mt-2 text-sm text-slate-600">
+                    {description}
+                </p>
+            )}
         </article>
     );
 }

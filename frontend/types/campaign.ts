@@ -1,11 +1,17 @@
-export interface Campaign {
+export type Campaign = {
     id: number;
-    name?: string;
-    title?: string;
+    title: string;
     description: string;
-    goal?: number;
-    targetAmount?: number;
-    collected?: number;
-    currentAmount?: number;
+    goalAmount: number;
+    collectedAmount: number;
     status: string;
-}
+    createdAt: string;
+    endDate: string | null;
+};
+
+export type CampaignCreateRequest = {
+    title: string;
+    description: string;
+    goalAmount: number;
+    endDate: string | null;
+};
