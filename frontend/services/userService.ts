@@ -1,20 +1,20 @@
-import { getFromBff } from "@/lib/bff";
-import { getSession } from "@/lib/session";
+import { getFromBff, putToBff } from "@/lib/bff";
 import type { UserProfile } from "@/types/user";
+
+export type UserUpdateRequest = {
+    name: string;
+    phone: string;
+    address: string;
+    region: string;
+    comuna: string;
+};
 
 export const userService = {
     getCurrentProfile: () => {
-        const session = getSession();
+        return getFromBff<UserProfile>("/api/users/me");
+    },
 
-        if (!session) {
-            throw new Error("No hay sesión activa.");
-        }
-
-        /*
-         * Por ahora el BFF solo tiene /api/users/{id}.
-         * Más adelante conviene agregar /api/users/me en el BFF.
-         * Dejaremos este método preparado para cuando tengamos ese endpoint.
-         */
-        return getFromBff<UserProfile>("/api/users/1");
+    updateProfile: (id: number, payload: UserUpdateRequest) => {
+        return putToBff<UserProfile>(`/api/users/${id}`, payload);
     },
 };

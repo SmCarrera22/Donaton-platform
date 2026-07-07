@@ -4,6 +4,7 @@ import com.donaton.bff.dto.CampaignRequest;
 import com.donaton.bff.dto.DonationRequest;
 import com.donaton.bff.dto.LoginRequest;
 import com.donaton.bff.dto.RegisterRequest;
+import com.donaton.bff.dto.UserUpdateRequest;
 import com.donaton.bff.service.BackendGatewayService;
 
 import jakarta.validation.Valid;
@@ -36,6 +37,21 @@ public class BffController {
         return backendGatewayService.getUserById(id);
     }
 
+    @GetMapping("/users/me")
+    public ResponseEntity<Object> getCurrentUser(
+            @RequestHeader("Authorization") String authorization
+    ) {
+        return backendGatewayService.getCurrentUser(authorization);
+    }
+
+    @PutMapping("/users/{id}")
+    public ResponseEntity<Object> updateUser(
+            @PathVariable Long id,
+            @RequestBody UserUpdateRequest request
+    ) {
+        return backendGatewayService.updateUser(id, request);
+    }
+
     @PostMapping("/validate")
     public ResponseEntity<Object> validate(
             @RequestHeader("Authorization")
@@ -47,8 +63,14 @@ public class BffController {
     }
 
     @PostMapping("/donations")
-    public ResponseEntity<Object> createDonation(@Valid @RequestBody DonationRequest request) {
-        return backendGatewayService.createDonation(request);
+    public ResponseEntity<Object> createDonation(
+            @RequestHeader("Authorization") String authorization,
+            @Valid @RequestBody DonationRequest request
+    ) {
+        return backendGatewayService.createDonation(
+                request,
+                authorization
+        );
     }
 
     @GetMapping("/donations")

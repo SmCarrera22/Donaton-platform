@@ -11,7 +11,6 @@ import lombok.Setter;
 @Setter
 public class DonationRequest {
 
-    @NotNull(message = "El donorId es obligatorio")
     private Long donorId;
 
     @NotBlank(message = "El nombre del recurso es obligatorio")

@@ -1,16 +1,16 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { userService } from "@/services/userService";
 import { extractErrorMessage } from "@/lib/bff";
 import type { UserProfile } from "@/types/user";
 
 export function useProfile() {
     const [profile, setProfile] = useState<UserProfile | null>(null);
-    const [isLoading, setIsLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
 
-    const loadProfile = async () => {
+    const loadProfile = useCallback(async () => {
         setIsLoading(true);
         setErrorMessage("");
 
@@ -35,11 +35,15 @@ export function useProfile() {
         } finally {
             setIsLoading(false);
         }
-    };
+    }, []);
 
     useEffect(() => {
-        loadProfile();
-    }, []);
+        const timer = window.setTimeout(() => {
+            void loadProfile();
+        }, 0);
+
+        return () => window.clearTimeout(timer);
+    }, [loadProfile]);
 
     return {
         profile,

@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.HashMap;
@@ -48,20 +47,18 @@ public class BackendGatewayService {
                         .fromUriString(userServiceUrl)
                         .path("/users")
                         .toUriString();
+
         Map<String,Object> payload =
                 new HashMap<>();
-        payload.put(
-                "name",
-                request.getFullName()
-        );
-        payload.put(
-                "email",
-                request.getEmail()
-        );
-        payload.put(
-                "password",
-                request.getPassword()
-        );
+
+        payload.put("name", request.getFullName());
+        payload.put("email", request.getEmail());
+        payload.put("password", request.getPassword());
+        payload.put("phone", request.getPhone());
+        payload.put("address", request.getAddress());
+        payload.put("region", request.getRegion());
+        payload.put("comuna", request.getComuna());
+
         return exchange(
                 url,
                 HttpMethod.POST,
@@ -122,6 +119,53 @@ public class BackendGatewayService {
         );
     }
 
+    public ResponseEntity<Object> getCurrentUser(String authorization) {
+        ResponseEntity<Object> validateResponse = validateToken(authorization);
+
+        Object body = validateResponse.getBody();
+
+        if (!(body instanceof Map<?, ?> responseBody)) {
+            throw new RuntimeException("Respuesta inválida del servicio de autenticación");
+        }
+
+        Object valid = responseBody.get("valid");
+        Object email = responseBody.get("email");
+
+        if (!(Boolean.TRUE.equals(valid)) || email == null) {
+            throw new RuntimeException("Token inválido o usuario no autenticado");
+        }
+
+        String url = UriComponentsBuilder
+                .fromUriString(userServiceUrl)
+                .path("/users/email/{email}")
+                .buildAndExpand(email.toString())
+                .toUriString();
+
+        return exchange(
+                url,
+                HttpMethod.GET,
+                null
+        );
+    }
+
+    public ResponseEntity<Object> updateUser(
+            Long id,
+            UserUpdateRequest request
+    ) {
+        String url =
+                UriComponentsBuilder
+                        .fromUriString(userServiceUrl)
+                        .path("/users/{id}")
+                        .buildAndExpand(id)
+                        .toUriString();
+
+        return exchange(
+                url,
+                HttpMethod.PUT,
+                request
+        );
+    }
+
     private ResponseEntity<Object> exchange(
             String url,
             HttpMethod method,
@@ -170,16 +214,40 @@ public class BackendGatewayService {
     }
 
     public ResponseEntity<Object> createDonation(
-            DonationRequest request
+            DonationRequest request,
+            String authorization
     ){
+        ResponseEntity<Object> currentUserResponse = getCurrentUser(authorization);
+
+        Object currentUserBody = currentUserResponse.getBody();
+
+        if (!(currentUserBody instanceof Map<?, ?> userBody)) {
+            throw new RuntimeException("No se pudo obtener el usuario autenticado");
+        }
+
+        Object userId = userBody.get("id");
+
+        if (userId == null) {
+            throw new RuntimeException("El usuario autenticado no tiene ID válido");
+        }
+
         String url = UriComponentsBuilder
                 .fromUriString(donationServiceUrl)
                 .path("/donations")
                 .toUriString();
+
+        Map<String, Object> payload = new HashMap<>();
+
+        payload.put("donorId", Long.valueOf(userId.toString()));
+        payload.put("donorType", request.getDonorType());
+        payload.put("resourceType", request.getResourceType());
+        payload.put("quantity", request.getQuantity());
+        payload.put("resourceName", request.getResourceName());
+
         return exchange(
                 url,
                 HttpMethod.POST,
-                request
+                payload
         );
     }
 
