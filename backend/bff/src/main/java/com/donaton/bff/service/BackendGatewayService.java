@@ -148,6 +148,24 @@ public class BackendGatewayService {
         );
     }
 
+    public ResponseEntity<Object> updateUser(
+            Long id,
+            UserUpdateRequest request
+    ) {
+        String url =
+                UriComponentsBuilder
+                        .fromUriString(userServiceUrl)
+                        .path("/users/{id}")
+                        .buildAndExpand(id)
+                        .toUriString();
+
+        return exchange(
+                url,
+                HttpMethod.PUT,
+                request
+        );
+    }
+
     private ResponseEntity<Object> exchange(
             String url,
             HttpMethod method,

@@ -4,6 +4,7 @@ import com.donaton.bff.dto.CampaignRequest;
 import com.donaton.bff.dto.DonationRequest;
 import com.donaton.bff.dto.LoginRequest;
 import com.donaton.bff.dto.RegisterRequest;
+import com.donaton.bff.dto.UserUpdateRequest;
 import com.donaton.bff.service.BackendGatewayService;
 
 import jakarta.validation.Valid;
@@ -41,6 +42,14 @@ public class BffController {
             @RequestHeader("Authorization") String authorization
     ) {
         return backendGatewayService.getCurrentUser(authorization);
+    }
+
+    @PutMapping("/users/{id}")
+    public ResponseEntity<Object> updateUser(
+            @PathVariable Long id,
+            @RequestBody UserUpdateRequest request
+    ) {
+        return backendGatewayService.updateUser(id, request);
     }
 
     @PostMapping("/validate")

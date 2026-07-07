@@ -1,16 +1,16 @@
-export interface UserProfile {
+export type UserProfile = {
     id: number;
     name: string;
     email: string;
-    phone?: string;
-    address?: string;
-    region?: string;
-    comuna?: string;
-    role: "USER" | "ADMIN";
-}
+    phone: string | null;
+    address: string | null;
+    region: string | null;
+    comuna: string | null;
+    role: string;
+};
 
-export interface AuthSession {
+export type AuthSession = {
     token: string;
     email: string;
     role: string;
-}
+};
