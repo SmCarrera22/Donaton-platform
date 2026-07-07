@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.HashMap;
@@ -48,20 +47,18 @@ public class BackendGatewayService {
                         .fromUriString(userServiceUrl)
                         .path("/users")
                         .toUriString();
+
         Map<String,Object> payload =
                 new HashMap<>();
-        payload.put(
-                "name",
-                request.getFullName()
-        );
-        payload.put(
-                "email",
-                request.getEmail()
-        );
-        payload.put(
-                "password",
-                request.getPassword()
-        );
+
+        payload.put("name", request.getFullName());
+        payload.put("email", request.getEmail());
+        payload.put("password", request.getPassword());
+        payload.put("phone", request.getPhone());
+        payload.put("address", request.getAddress());
+        payload.put("region", request.getRegion());
+        payload.put("comuna", request.getComuna());
+
         return exchange(
                 url,
                 HttpMethod.POST,
