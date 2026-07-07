@@ -214,16 +214,40 @@ public class BackendGatewayService {
     }
 
     public ResponseEntity<Object> createDonation(
-            DonationRequest request
+            DonationRequest request,
+            String authorization
     ){
+        ResponseEntity<Object> currentUserResponse = getCurrentUser(authorization);
+
+        Object currentUserBody = currentUserResponse.getBody();
+
+        if (!(currentUserBody instanceof Map<?, ?> userBody)) {
+            throw new RuntimeException("No se pudo obtener el usuario autenticado");
+        }
+
+        Object userId = userBody.get("id");
+
+        if (userId == null) {
+            throw new RuntimeException("El usuario autenticado no tiene ID válido");
+        }
+
         String url = UriComponentsBuilder
                 .fromUriString(donationServiceUrl)
                 .path("/donations")
                 .toUriString();
+
+        Map<String, Object> payload = new HashMap<>();
+
+        payload.put("donorId", Long.valueOf(userId.toString()));
+        payload.put("donorType", request.getDonorType());
+        payload.put("resourceType", request.getResourceType());
+        payload.put("quantity", request.getQuantity());
+        payload.put("resourceName", request.getResourceName());
+
         return exchange(
                 url,
                 HttpMethod.POST,
-                request
+                payload
         );
     }
 

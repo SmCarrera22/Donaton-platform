@@ -63,8 +63,14 @@ public class BffController {
     }
 
     @PostMapping("/donations")
-    public ResponseEntity<Object> createDonation(@Valid @RequestBody DonationRequest request) {
-        return backendGatewayService.createDonation(request);
+    public ResponseEntity<Object> createDonation(
+            @RequestHeader("Authorization") String authorization,
+            @Valid @RequestBody DonationRequest request
+    ) {
+        return backendGatewayService.createDonation(
+                request,
+                authorization
+        );
     }
 
     @GetMapping("/donations")

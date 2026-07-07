@@ -1,20 +1,12 @@
 import { getFromBff, postToBff } from "@/lib/bff";
-import type { Donation } from "@/types/donation";
-
-export type DonationRequest = {
-    donorId: number;
-    resourceName: string;
-    quantity: number;
-    resourceType: string;
-    donorType: string;
-};
+import type { Donation, DonationCreateRequest } from "@/types/donation";
 
 export const donationService = {
     getAll: () => {
         return getFromBff<Donation[]>("/api/donations");
     },
 
-    create: (payload: DonationRequest) => {
+    create: (payload: DonationCreateRequest) => {
         return postToBff<Donation>("/api/donations", payload);
     },
 };

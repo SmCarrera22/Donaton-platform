@@ -8,8 +8,6 @@ interface Props {
     onDonationCreated: () => void;
 }
 
-const TEMP_DONOR_ID = 1;
-
 export default function DonationForm({ onDonationCreated }: Props) {
     const [resourceName, setResourceName] = useState("");
     const [quantity, setQuantity] = useState("");
@@ -26,7 +24,6 @@ export default function DonationForm({ onDonationCreated }: Props) {
 
         try {
             const response = await donationService.create({
-                donorId: TEMP_DONOR_ID,
                 resourceName,
                 quantity: Number(quantity),
                 resourceType,
@@ -59,7 +56,7 @@ export default function DonationForm({ onDonationCreated }: Props) {
 
     return (
         <section className="mb-8 rounded-xl border bg-white p-6 shadow-sm">
-            <h2 className="text-xl font-semibold text-slate-800">
+            <h2 className="text-xl font-semibold text-slate-900">
                 Registrar nueva donación
             </h2>
 
@@ -68,7 +65,7 @@ export default function DonationForm({ onDonationCreated }: Props) {
                     value={resourceName}
                     onChange={(event) => setResourceName(event.target.value)}
                     placeholder="Nombre del recurso"
-                    className="rounded-lg border px-4 py-3 text-slate-800 placeholder:text-slate-500"
+                    className="rounded-lg border px-4 py-3 text-slate-900 placeholder:text-slate-500"
                     required
                 />
 
@@ -78,14 +75,14 @@ export default function DonationForm({ onDonationCreated }: Props) {
                     placeholder="Cantidad"
                     type="number"
                     min="1"
-                    className="rounded-lg border px-4 py-3 text-slate-800 placeholder:text-slate-500"
+                    className="rounded-lg border px-4 py-3 text-slate-900 placeholder:text-slate-500"
                     required
                 />
 
                 <select
                     value={resourceType}
                     onChange={(event) => setResourceType(event.target.value)}
-                    className="rounded-lg border px-4 py-3 text-slate-800"
+                    className="rounded-lg border px-4 py-3 text-slate-900"
                 >
                     <option value="ALIMENTOS">Alimentos</option>
                     <option value="ROPA">Ropa</option>
@@ -95,7 +92,7 @@ export default function DonationForm({ onDonationCreated }: Props) {
                 <select
                     value={donorType}
                     onChange={(event) => setDonorType(event.target.value)}
-                    className="rounded-lg border px-4 py-3 text-slate-800"
+                    className="rounded-lg border px-4 py-3 text-slate-900"
                 >
                     <option value="PERSONA">Persona</option>
                     <option value="EMPRESA">Empresa</option>
