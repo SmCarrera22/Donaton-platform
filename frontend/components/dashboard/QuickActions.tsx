@@ -12,7 +12,7 @@ export default function QuickActions() {
                     href="/campaigns"
                     className="rounded-lg bg-sky-600 px-5 py-3 font-semibold text-white transition hover:bg-sky-700"
                 >
-                    Nueva campaña
+                    Ver campañas
                 </Link>
 
                 <Link

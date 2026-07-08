@@ -1,16 +1,16 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { campaignService } from "@/services/campaignService";
 import type { Campaign } from "@/types/campaign";
 import { extractErrorMessage } from "@/lib/bff";
 
 export function useCampaigns() {
     const [campaigns, setCampaigns] = useState<Campaign[]>([]);
-    const [isLoading, setIsLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
 
-    const loadCampaigns = async () => {
+    const loadCampaigns = useCallback(async () => {
         setIsLoading(true);
         setErrorMessage("");
 
@@ -29,19 +29,24 @@ export function useCampaigns() {
 
             if (Array.isArray(response.body)) {
                 setCampaigns(response.body);
-            } else {
-                setCampaigns([]);
+                return;
             }
+
+            setCampaigns([]);
         } catch {
             setErrorMessage("No fue posible conectar con el servicio de campañas.");
         } finally {
             setIsLoading(false);
         }
-    };
+    }, []);
 
     useEffect(() => {
-        loadCampaigns();
-    }, []);
+        const timer = window.setTimeout(() => {
+            void loadCampaigns();
+        }, 0);
+
+        return () => window.clearTimeout(timer);
+    }, [loadCampaigns]);
 
     return {
         campaigns,
