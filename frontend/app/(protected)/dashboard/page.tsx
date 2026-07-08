@@ -4,6 +4,8 @@ import DashboardWelcome from "@/components/dashboard/DashboardWelcome";
 import StatisticsGrid from "@/components/dashboard/StatisticsGrid";
 import QuickActions from "@/components/dashboard/QuickActions";
 import RecentActivity from "@/components/dashboard/RecentActivity";
+import ResourceSummary from "@/components/dashboard/ResourceSummary";
+import ActiveCampaignsSummary from "@/components/dashboard/ActiveCampaignsSummary";
 import { useDashboard } from "@/hooks/useDashboard";
 
 export default function DashboardPage() {
@@ -49,6 +51,11 @@ export default function DashboardPage() {
             />
 
             <QuickActions />
+
+            <div className="grid gap-6 xl:grid-cols-2">
+                <ResourceSummary donations={donations} />
+                <ActiveCampaignsSummary campaigns={campaigns} />
+            </div>
 
             <RecentActivity
                 campaigns={campaigns}
