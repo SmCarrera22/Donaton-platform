@@ -55,60 +55,86 @@ export default function DonationForm({ onDonationCreated }: Props) {
     };
 
     return (
-        <section className="mb-8 rounded-xl border bg-white p-6 shadow-sm">
-            <h2 className="text-xl font-semibold text-slate-900">
+        <section className="rounded-xl border bg-white p-6 shadow-sm">
+            <h2 className="text-xl font-bold text-slate-900">
                 Registrar nueva donación
             </h2>
 
+            <p className="mt-2 text-sm text-slate-700">
+                Esta donación quedará asociada automáticamente a tu cuenta.
+            </p>
+
             <form onSubmit={handleSubmit} className="mt-6 grid gap-4 md:grid-cols-2">
-                <input
-                    value={resourceName}
-                    onChange={(event) => setResourceName(event.target.value)}
-                    placeholder="Nombre del recurso"
-                    className="rounded-lg border px-4 py-3 text-slate-900 placeholder:text-slate-500"
-                    required
-                />
+                <div>
+                    <label className="mb-1 block text-sm font-semibold text-slate-800">
+                        Nombre del recurso
+                    </label>
+                    <input
+                        value={resourceName}
+                        onChange={(event) => setResourceName(event.target.value)}
+                        placeholder="Ej: Arroz, frazadas, medicamentos"
+                        className="w-full rounded-lg border px-4 py-3 text-slate-900 placeholder:text-slate-500"
+                        required
+                    />
+                </div>
 
-                <input
-                    value={quantity}
-                    onChange={(event) => setQuantity(event.target.value)}
-                    placeholder="Cantidad"
-                    type="number"
-                    min="1"
-                    className="rounded-lg border px-4 py-3 text-slate-900 placeholder:text-slate-500"
-                    required
-                />
+                <div>
+                    <label className="mb-1 block text-sm font-semibold text-slate-800">
+                        Cantidad
+                    </label>
+                    <input
+                        value={quantity}
+                        onChange={(event) => setQuantity(event.target.value)}
+                        placeholder="Ej: 10"
+                        type="number"
+                        min="1"
+                        className="w-full rounded-lg border px-4 py-3 text-slate-900 placeholder:text-slate-500"
+                        required
+                    />
+                </div>
 
-                <select
-                    value={resourceType}
-                    onChange={(event) => setResourceType(event.target.value)}
-                    className="rounded-lg border px-4 py-3 text-slate-900"
-                >
-                    <option value="ALIMENTOS">Alimentos</option>
-                    <option value="ROPA">Ropa</option>
-                    <option value="INSUMOS_MEDICOS">Insumos Médicos</option>
-                </select>
+                <div>
+                    <label className="mb-1 block text-sm font-semibold text-slate-800">
+                        Tipo de recurso
+                    </label>
+                    <select
+                        value={resourceType}
+                        onChange={(event) => setResourceType(event.target.value)}
+                        className="w-full rounded-lg border px-4 py-3 text-slate-900"
+                    >
+                        <option value="ALIMENTOS">Alimentos</option>
+                        <option value="ROPA">Ropa</option>
+                        <option value="INSUMOS_MEDICOS">Insumos médicos</option>
+                    </select>
+                </div>
 
-                <select
-                    value={donorType}
-                    onChange={(event) => setDonorType(event.target.value)}
-                    className="rounded-lg border px-4 py-3 text-slate-900"
-                >
-                    <option value="PERSONA">Persona</option>
-                    <option value="EMPRESA">Empresa</option>
-                </select>
+                <div>
+                    <label className="mb-1 block text-sm font-semibold text-slate-800">
+                        Tipo de donante
+                    </label>
+                    <select
+                        value={donorType}
+                        onChange={(event) => setDonorType(event.target.value)}
+                        className="w-full rounded-lg border px-4 py-3 text-slate-900"
+                    >
+                        <option value="PERSONA">Persona</option>
+                        <option value="EMPRESA">Empresa</option>
+                    </select>
+                </div>
 
-                <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="rounded-lg bg-sky-600 px-5 py-3 font-semibold text-white hover:bg-sky-700 disabled:opacity-60"
-                >
-                    {isSubmitting ? "Registrando..." : "Registrar donación"}
-                </button>
+                <div className="md:col-span-2">
+                    <button
+                        type="submit"
+                        disabled={isSubmitting}
+                        className="rounded-lg bg-sky-600 px-5 py-3 font-semibold text-white hover:bg-sky-700 disabled:opacity-60"
+                    >
+                        {isSubmitting ? "Registrando..." : "Registrar donación"}
+                    </button>
+                </div>
             </form>
 
             {message && (
-                <p className="mt-4 text-sm font-medium text-slate-700">
+                <p className="mt-4 text-sm font-semibold text-slate-700">
                     {message}
                 </p>
             )}

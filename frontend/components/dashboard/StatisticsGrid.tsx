@@ -1,33 +1,45 @@
 import StatsCard from "@/components/cards/StatsCard";
 
-export default function StatisticsGrid() {
-    return (
-        <section className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+type Props = {
+    totalCampaigns: number;
+    activeCampaigns: number;
+    totalDonations: number;
+    pendingDonations: number;
+    totalDonationQuantity: number;
+};
 
+export default function StatisticsGrid({
+                                           totalCampaigns,
+                                           activeCampaigns,
+                                           totalDonations,
+                                           pendingDonations,
+                                           totalDonationQuantity,
+                                       }: Props) {
+    return (
+        <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
             <StatsCard
                 title="Campañas"
-                value="12"
-                subtitle="2 activas"
+                value={totalCampaigns}
+                description={`${activeCampaigns} activas`}
             />
 
             <StatsCard
                 title="Donaciones"
-                value="53"
-                subtitle="Este mes"
+                value={totalDonations}
+                description={`${pendingDonations} pendientes`}
             />
 
             <StatsCard
-                title="Monto donado"
-                value="$1.250.000"
-                subtitle="Histórico"
+                title="Recursos aportados"
+                value={totalDonationQuantity}
+                description="Cantidad total registrada"
             />
 
             <StatsCard
-                title="Impacto"
-                value="98%"
-                subtitle="Transparencia"
+                title="Estado general"
+                value="Activo"
+                description="Sistema operativo"
             />
-
         </section>
     );
 }
