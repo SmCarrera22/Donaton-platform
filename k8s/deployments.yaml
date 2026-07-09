@@ -20,6 +20,8 @@ spec:
           ports:
             - containerPort: 8081
           env:
+            - name: JAVA_TOOL_OPTIONS
+              value: "-Xms128m -Xmx256m"
             - name: DB_URL
               valueFrom:
                 secretKeyRef:
@@ -35,6 +37,13 @@ spec:
                 secretKeyRef:
                   name: donaton-db-secrets
                   key: USER_DB_PASSWORD
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "100m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
 
 ---
 apiVersion: apps/v1
@@ -58,6 +67,16 @@ spec:
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8082
+          env:
+            - name: JAVA_TOOL_OPTIONS
+              value: "-Xms128m -Xmx256m"
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "100m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
 
 ---
 apiVersion: apps/v1
@@ -82,6 +101,8 @@ spec:
           ports:
             - containerPort: 8083
           env:
+            - name: JAVA_TOOL_OPTIONS
+              value: "-Xms128m -Xmx256m"
             - name: DB_URL
               valueFrom:
                 secretKeyRef:
@@ -97,6 +118,13 @@ spec:
                 secretKeyRef:
                   name: donaton-db-secrets
                   key: DONATION_DB_PASSWORD
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "100m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
 
 ---
 apiVersion: apps/v1
@@ -121,6 +149,8 @@ spec:
           ports:
             - containerPort: 8084
           env:
+            - name: JAVA_TOOL_OPTIONS
+              value: "-Xms128m -Xmx256m"
             - name: DB_URL
               valueFrom:
                 secretKeyRef:
@@ -136,6 +166,13 @@ spec:
                 secretKeyRef:
                   name: donaton-db-secrets
                   key: CAMPAIGN_DB_PASSWORD
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "100m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
 
 ---
 apiVersion: apps/v1
@@ -160,6 +197,8 @@ spec:
           ports:
             - containerPort: 8080
           env:
+            - name: JAVA_TOOL_OPTIONS
+              value: "-Xms128m -Xmx256m"
             - name: AUTH_SERVICE_URL
               valueFrom:
                 configMapKeyRef:
@@ -180,6 +219,13 @@ spec:
                 configMapKeyRef:
                   name: donaton-config
                   key: CAMPAIGN_SERVICE_URL
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "100m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
 
 ---
 apiVersion: apps/v1
@@ -204,11 +250,20 @@ spec:
           ports:
             - containerPort: 8090
           env:
+            - name: JAVA_TOOL_OPTIONS
+              value: "-Xms128m -Xmx256m"
             - name: BFF_URL
               valueFrom:
                 configMapKeyRef:
                   name: donaton-config
                   key: BFF_URL
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "100m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
 
 ---
 apiVersion: apps/v1
@@ -238,3 +293,10 @@ spec:
                 configMapKeyRef:
                   name: donaton-config
                   key: API_GATEWAY_URL
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "100m"
+            limits:
+              memory: "768Mi"
+              cpu: "500m"

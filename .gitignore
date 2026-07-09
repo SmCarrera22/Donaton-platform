@@ -32,3 +32,8 @@ Variables de entorno
 **/build/
 *.lock
 *.bin
+
+k8s/create-secrets-local.sh
+k8s/secrets.yaml
+.env
+.env.local
