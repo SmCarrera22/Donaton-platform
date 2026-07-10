@@ -1,0 +1,302 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ms-user
+  namespace: donaton
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ms-user
+  template:
+    metadata:
+      labels:
+        app: ms-user
+    spec:
+      containers:
+        - name: ms-user
+          image: donaton-platform-ms-user:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8081
+          env:
+            - name: JAVA_TOOL_OPTIONS
+              value: "-Xms128m -Xmx256m"
+            - name: DB_URL
+              valueFrom:
+                secretKeyRef:
+                  name: donaton-db-secrets
+                  key: USER_DB_URL
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: donaton-db-secrets
+                  key: USER_DB_USER
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: donaton-db-secrets
+                  key: USER_DB_PASSWORD
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "100m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ms-auth
+  namespace: donaton
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ms-auth
+  template:
+    metadata:
+      labels:
+        app: ms-auth
+    spec:
+      containers:
+        - name: ms-auth
+          image: donaton-platform-ms-auth:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8082
+          env:
+            - name: JAVA_TOOL_OPTIONS
+              value: "-Xms128m -Xmx256m"
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "100m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ms-donation
+  namespace: donaton
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ms-donation
+  template:
+    metadata:
+      labels:
+        app: ms-donation
+    spec:
+      containers:
+        - name: ms-donation
+          image: donaton-platform-ms-donation:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8083
+          env:
+            - name: JAVA_TOOL_OPTIONS
+              value: "-Xms128m -Xmx256m"
+            - name: DB_URL
+              valueFrom:
+                secretKeyRef:
+                  name: donaton-db-secrets
+                  key: DONATION_DB_URL
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: donaton-db-secrets
+                  key: DONATION_DB_USER
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: donaton-db-secrets
+                  key: DONATION_DB_PASSWORD
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "100m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ms-campaign
+  namespace: donaton
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ms-campaign
+  template:
+    metadata:
+      labels:
+        app: ms-campaign
+    spec:
+      containers:
+        - name: ms-campaign
+          image: donaton-platform-ms-campaign:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8084
+          env:
+            - name: JAVA_TOOL_OPTIONS
+              value: "-Xms128m -Xmx256m"
+            - name: DB_URL
+              valueFrom:
+                secretKeyRef:
+                  name: donaton-db-secrets
+                  key: CAMPAIGN_DB_URL
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: donaton-db-secrets
+                  key: CAMPAIGN_DB_USER
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: donaton-db-secrets
+                  key: CAMPAIGN_DB_PASSWORD
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "100m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bff
+  namespace: donaton
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bff
+  template:
+    metadata:
+      labels:
+        app: bff
+    spec:
+      containers:
+        - name: bff
+          image: donaton-platform-bff:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          env:
+            - name: JAVA_TOOL_OPTIONS
+              value: "-Xms128m -Xmx256m"
+            - name: AUTH_SERVICE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: donaton-config
+                  key: AUTH_SERVICE_URL
+            - name: USER_SERVICE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: donaton-config
+                  key: USER_SERVICE_URL
+            - name: DONATION_SERVICE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: donaton-config
+                  key: DONATION_SERVICE_URL
+            - name: CAMPAIGN_SERVICE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: donaton-config
+                  key: CAMPAIGN_SERVICE_URL
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "100m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-gateway
+  namespace: donaton
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api-gateway
+  template:
+    metadata:
+      labels:
+        app: api-gateway
+    spec:
+      containers:
+        - name: api-gateway
+          image: donaton-platform-api-gateway:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8090
+          env:
+            - name: JAVA_TOOL_OPTIONS
+              value: "-Xms128m -Xmx256m"
+            - name: BFF_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: donaton-config
+                  key: BFF_URL
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "100m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  namespace: donaton
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+        - name: frontend
+          image: donaton-platform-frontend:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 3000
+          env:
+            - name: API_GATEWAY_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: donaton-config
+                  key: API_GATEWAY_URL
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "100m"
+            limits:
+              memory: "768Mi"
+              cpu: "500m"

@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: donaton-config
+  namespace: donaton
+data:
+  AUTH_SERVICE_URL: "http://ms-auth:8082"
+  USER_SERVICE_URL: "http://ms-user:8081"
+  DONATION_SERVICE_URL: "http://ms-donation:8083"
+  CAMPAIGN_SERVICE_URL: "http://ms-campaign:8084"
+  BFF_URL: "http://bff:8080"
+  API_GATEWAY_URL: "http://api-gateway:8090"
