@@ -1,7 +1,6 @@
 "use client";
 
-import Link from "next/link";
-import { Heart, UserCircle } from "lucide-react";
+import { Heart } from "lucide-react";
 import { useRegisterForm } from "@/hooks/useRegisterForm";
 import PublicNavbar from "@/components/layout/PublicNavbar";
 import PublicHero from "@/components/layout/PublicHero";
