@@ -35,5 +35,14 @@ Variables de entorno
 
 k8s/create-secrets-local.sh
 k8s/secrets.yaml
+
+# Archivos temporales de ejecución local
+.runtime/
+
+# Secret local de Kubernetes
+k8s/secrets-local.yaml
+
+# Variables de entorno
 .env
 .env.local
+.env.*.local
