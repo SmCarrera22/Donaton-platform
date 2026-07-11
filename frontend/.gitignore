@@ -12,8 +12,10 @@
 
 # testing
 frontend/coverage/
+frontend/tsconfig.tsbuildinfo
 coverage/
 /coverage
+
 
 # next.js
 /.next/
