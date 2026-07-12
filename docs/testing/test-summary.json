@@ -1,0 +1,110 @@
+{
+  "generatedAt": "2026-07-12T14:23:09",
+  "summary": {
+    "tests": 163,
+    "passed": 163,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "components": [
+    {
+      "component": "frontend",
+      "tests": 42,
+      "passed": 42,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "durationSeconds": 0.0,
+      "coverage": {
+        "instructionsOrLines": 25.0,
+        "branches": 22.8
+      },
+      "status": "APROBADO"
+    },
+    {
+      "component": "ms-user",
+      "tests": 16,
+      "passed": 16,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "durationSeconds": 19.516,
+      "coverage": {
+        "instructionsOrLines": 84.65,
+        "branches": 100.0
+      },
+      "status": "APROBADO"
+    },
+    {
+      "component": "ms-auth",
+      "tests": 15,
+      "passed": 15,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "durationSeconds": 13.367,
+      "coverage": {
+        "instructionsOrLines": 100.0,
+        "branches": 100.0
+      },
+      "status": "APROBADO"
+    },
+    {
+      "component": "ms-campaign",
+      "tests": 19,
+      "passed": 19,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "durationSeconds": 18.459,
+      "coverage": {
+        "instructionsOrLines": 100.0,
+        "branches": null
+      },
+      "status": "APROBADO"
+    },
+    {
+      "component": "ms-donation",
+      "tests": 19,
+      "passed": 19,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "durationSeconds": 20.737,
+      "coverage": {
+        "instructionsOrLines": 100.0,
+        "branches": null
+      },
+      "status": "APROBADO"
+    },
+    {
+      "component": "bff",
+      "tests": 39,
+      "passed": 39,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "durationSeconds": 11.886,
+      "coverage": {
+        "instructionsOrLines": 100.0,
+        "branches": 100.0
+      },
+      "status": "APROBADO"
+    },
+    {
+      "component": "api-gateway",
+      "tests": 13,
+      "passed": 13,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "durationSeconds": 9.863,
+      "coverage": {
+        "instructionsOrLines": 100.0,
+        "branches": null
+      },
+      "status": "APROBADO"
+    }
+  ]
+}
