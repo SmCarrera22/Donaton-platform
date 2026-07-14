@@ -62,6 +62,17 @@ public class UserService {
         return map(user);
     }
 
+    public UserResponse findByEmail(String email) {
+        User user = repository.findByEmail(email)
+                .orElseThrow(
+                        () -> new ResourceNotFoundException(
+                                "Usuario no encontrado"
+                        )
+                );
+
+        return map(user);
+    }
+
     public UserResponse update(
             Long id,
             UserUpdateRequest request

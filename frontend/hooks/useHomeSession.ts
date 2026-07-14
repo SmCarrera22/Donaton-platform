@@ -1,29 +1,27 @@
-import { useState, useEffect } from "react";
-import { clearCurrentSessionUser, getCurrentSessionUser } from "@/lib/session";
+"use client";
 
-export type LoggedInUser = {
-    fullName: string;
-    email: string;
-    createdAt: string;
-};
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import {
+    clearSession,
+    getSession,
+} from "@/lib/session";
+import type { AuthSession } from "@/types/user";
 
 export function useHomeSession() {
-    const [loggedInUser, setLoggedInUser] = useState<LoggedInUser | null>(null);
+    const router = useRouter();
 
-    useEffect(() => {
-        const currentSession = getCurrentSessionUser();
-        if (currentSession) {
-            setLoggedInUser(currentSession);
-        }
-    }, []);
+    const [loggedInUser, setLoggedInUser] =
+        useState<AuthSession | null>(() => getSession());
 
     const handleLogout = () => {
-        clearCurrentSessionUser();
+        clearSession();
         setLoggedInUser(null);
+        router.push("/login");
     };
 
     return {
         loggedInUser,
-        handleLogout
+        handleLogout,
     };
 }

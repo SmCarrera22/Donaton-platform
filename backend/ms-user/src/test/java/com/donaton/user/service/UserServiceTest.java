@@ -1,22 +1,35 @@
 package com.donaton.user.service;
 
-import com.donaton.user.dto.*;
+import com.donaton.user.dto.UserAuthResponse;
+import com.donaton.user.dto.UserCreateRequest;
+import com.donaton.user.dto.UserResponse;
+import com.donaton.user.dto.UserUpdateRequest;
 import com.donaton.user.entity.User;
 import com.donaton.user.exception.DuplicateResourceException;
 import com.donaton.user.exception.ResourceNotFoundException;
 import com.donaton.user.repository.UserRepository;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
@@ -30,159 +43,304 @@ class UserServiceTest {
     @InjectMocks
     private UserService service;
 
-    // ================= CREATE =================
+    private User existingUser;
+
+    @BeforeEach
+    void setUp() {
+        existingUser = User.builder()
+                .id(1L)
+                .name("Sebastián Carrera")
+                .email("sebastian@donaton.cl")
+                .password("encoded-password")
+                .role("USER")
+                .phone("+56912345678")
+                .address("Av. Principal 123")
+                .region("Metropolitana")
+                .comuna("Santiago")
+                .build();
+    }
 
     @Test
-    void shouldCreateUserSuccessfully() {
+    @DisplayName("Debe crear un usuario y cifrar su contraseña")
+    void shouldCreateUser() {
         UserCreateRequest request = new UserCreateRequest(
-                "John",
-                "john@test.com",
-                "1234",
-                "999",
-                "street 1",
-                "region",
-                "comuna"
+                "Sebastián Carrera",
+                "sebastian@donaton.cl",
+                "password123",
+                "+56912345678",
+                "Av. Principal 123",
+                "Metropolitana",
+                "Santiago"
         );
 
-        when(repository.existsByEmail(request.email())).thenReturn(false);
-        when(passwordEncoder.encode(request.password())).thenReturn("ENCODED");
+        when(repository.existsByEmail(request.email()))
+                .thenReturn(false);
 
-        User savedUser = User.builder()
-                .id(1L)
-                .name(request.name())
-                .email(request.email())
-                .password("ENCODED")
-                .role("USER")
-                .phone(request.phone())
-                .address(request.address())
-                .region(request.region())
-                .comuna(request.comuna())
-                .build();
+        when(passwordEncoder.encode(request.password()))
+                .thenReturn("encoded-password");
 
-        when(repository.save(any(User.class))).thenReturn(savedUser);
+        when(repository.save(any(User.class)))
+                .thenAnswer(invocation -> {
+                    User user = invocation.getArgument(0);
+                    user.setId(1L);
+                    return user;
+                });
 
         UserResponse response = service.create(request);
 
-        assertNotNull(response);
-        assertEquals("john@test.com", response.email());
+        assertThat(response).isNotNull();
+        assertThat(response.id()).isEqualTo(1L);
+        assertThat(response.name()).isEqualTo("Sebastián Carrera");
+        assertThat(response.email()).isEqualTo("sebastian@donaton.cl");
+        assertThat(response.phone()).isEqualTo("+56912345678");
+        assertThat(response.address()).isEqualTo("Av. Principal 123");
+        assertThat(response.region()).isEqualTo("Metropolitana");
+        assertThat(response.comuna()).isEqualTo("Santiago");
+        assertThat(response.role()).isEqualTo("USER");
+
+        verify(repository).existsByEmail("sebastian@donaton.cl");
+        verify(passwordEncoder).encode("password123");
+        verify(repository).save(any(User.class));
     }
 
     @Test
-    void shouldThrowDuplicateEmail() {
+    @DisplayName("Debe rechazar la creación cuando el email ya existe")
+    void shouldRejectDuplicateEmail() {
         UserCreateRequest request = new UserCreateRequest(
-                "John",
-                "john@test.com",
-                "1234",
-                "999",
-                "street",
-                "region",
-                "comuna"
+                "Sebastián Carrera",
+                "sebastian@donaton.cl",
+                "password123",
+                null,
+                null,
+                null,
+                null
         );
 
-        when(repository.existsByEmail(request.email())).thenReturn(true);
+        when(repository.existsByEmail(request.email()))
+                .thenReturn(true);
 
-        assertThrows(DuplicateResourceException.class,
-                () -> service.create(request));
+        assertThatThrownBy(() -> service.create(request))
+                .isInstanceOf(DuplicateResourceException.class)
+                .hasMessage("Email ya registrado");
+
+        verify(repository).existsByEmail("sebastian@donaton.cl");
+        verify(passwordEncoder, never()).encode(any());
+        verify(repository, never()).save(any(User.class));
     }
 
-    // ================= FIND BY ID =================
-
     @Test
-    void shouldFindById() {
-        User user = User.builder()
-                .id(1L)
-                .name("John")
-                .email("john@test.com")
+    @DisplayName("Debe listar todos los usuarios")
+    void shouldFindAllUsers() {
+        User secondUser = User.builder()
+                .id(2L)
+                .name("María González")
+                .email("maria@donaton.cl")
+                .password("another-encoded-password")
+                .role("USER")
+                .phone("+56987654321")
+                .address("Calle Secundaria 456")
+                .region("Valparaíso")
+                .comuna("Viña del Mar")
                 .build();
 
-        when(repository.findById(1L)).thenReturn(Optional.of(user));
+        when(repository.findAll())
+                .thenReturn(List.of(existingUser, secondUser));
+
+        List<UserResponse> responses = service.findAll();
+
+        assertThat(responses).hasSize(2);
+
+        assertThat(responses.get(0).id()).isEqualTo(1L);
+        assertThat(responses.get(0).email())
+                .isEqualTo("sebastian@donaton.cl");
+
+        assertThat(responses.get(1).id()).isEqualTo(2L);
+        assertThat(responses.get(1).email())
+                .isEqualTo("maria@donaton.cl");
+
+        verify(repository).findAll();
+    }
+
+    @Test
+    @DisplayName("Debe buscar un usuario mediante su ID")
+    void shouldFindUserById() {
+        when(repository.findById(1L))
+                .thenReturn(Optional.of(existingUser));
 
         UserResponse response = service.findById(1L);
 
-        assertEquals(1L, response.id());
+        assertThat(response.id()).isEqualTo(1L);
+        assertThat(response.name()).isEqualTo("Sebastián Carrera");
+        assertThat(response.email()).isEqualTo("sebastian@donaton.cl");
+        assertThat(response.role()).isEqualTo("USER");
+
+        verify(repository).findById(1L);
     }
 
     @Test
-    void shouldThrowWhenUserNotFound() {
-        when(repository.findById(1L)).thenReturn(Optional.empty());
+    @DisplayName("Debe lanzar una excepción cuando el ID no existe")
+    void shouldThrowWhenUserIdDoesNotExist() {
+        when(repository.findById(99L))
+                .thenReturn(Optional.empty());
 
-        assertThrows(ResourceNotFoundException.class,
-                () -> service.findById(1L));
+        assertThatThrownBy(() -> service.findById(99L))
+                .isInstanceOf(ResourceNotFoundException.class)
+                .hasMessage("Usuario no encontrado");
+
+        verify(repository).findById(99L);
     }
 
-    // ================= FIND ALL =================
-
     @Test
-    void shouldReturnUsers() {
-        User user = User.builder()
-                .id(1L)
-                .name("John")
-                .email("john@test.com")
-                .build();
+    @DisplayName("Debe buscar un usuario mediante su email")
+    void shouldFindUserByEmail() {
+        when(repository.findByEmail("sebastian@donaton.cl"))
+                .thenReturn(Optional.of(existingUser));
 
-        when(repository.findAll()).thenReturn(List.of(user));
+        UserResponse response =
+                service.findByEmail("sebastian@donaton.cl");
 
-        List<UserResponse> result = service.findAll();
+        assertThat(response.id()).isEqualTo(1L);
+        assertThat(response.name()).isEqualTo("Sebastián Carrera");
+        assertThat(response.email()).isEqualTo("sebastian@donaton.cl");
 
-        assertEquals(1, result.size());
+        verify(repository).findByEmail("sebastian@donaton.cl");
     }
 
-    // ================= UPDATE =================
+    @Test
+    @DisplayName("Debe lanzar una excepción cuando el email no existe")
+    void shouldThrowWhenEmailDoesNotExist() {
+        when(repository.findByEmail("inexistente@donaton.cl"))
+                .thenReturn(Optional.empty());
+
+        assertThatThrownBy(
+                () -> service.findByEmail("inexistente@donaton.cl")
+        )
+                .isInstanceOf(ResourceNotFoundException.class)
+                .hasMessage("Usuario no encontrado");
+
+        verify(repository)
+                .findByEmail("inexistente@donaton.cl");
+    }
 
     @Test
+    @DisplayName("Debe actualizar los datos editables del usuario")
     void shouldUpdateUser() {
-        User user = User.builder()
-                .id(1L)
-                .name("Old")
-                .email("old@test.com")
-                .build();
-
         UserUpdateRequest request = new UserUpdateRequest(
-                "New",
-                "999",
-                "street",
-                "region",
-                "comuna"
+                "Sebastián Actualizado",
+                "+56911112222",
+                "Nueva dirección 789",
+                "Biobío",
+                "Concepción"
         );
 
-        when(repository.findById(1L)).thenReturn(Optional.of(user));
-        when(repository.save(any(User.class))).thenReturn(user);
+        when(repository.findById(1L))
+                .thenReturn(Optional.of(existingUser));
+
+        when(repository.save(any(User.class)))
+                .thenAnswer(invocation -> invocation.getArgument(0));
 
         UserResponse response = service.update(1L, request);
 
-        assertEquals("Old", response.name()); // mapped result
+        assertThat(response.id()).isEqualTo(1L);
+        assertThat(response.name())
+                .isEqualTo("Sebastián Actualizado");
+        assertThat(response.email())
+                .isEqualTo("sebastian@donaton.cl");
+        assertThat(response.phone())
+                .isEqualTo("+56911112222");
+        assertThat(response.address())
+                .isEqualTo("Nueva dirección 789");
+        assertThat(response.region())
+                .isEqualTo("Biobío");
+        assertThat(response.comuna())
+                .isEqualTo("Concepción");
+        assertThat(response.role())
+                .isEqualTo("USER");
+
+        verify(repository).findById(1L);
+        verify(repository).save(existingUser);
     }
 
-    // ================= DELETE =================
+    @Test
+    @DisplayName("Debe lanzar una excepción al actualizar un usuario inexistente")
+    void shouldThrowWhenUpdatingMissingUser() {
+        UserUpdateRequest request = new UserUpdateRequest(
+                "Nombre",
+                "Teléfono",
+                "Dirección",
+                "Región",
+                "Comuna"
+        );
+
+        when(repository.findById(99L))
+                .thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> service.update(99L, request))
+                .isInstanceOf(ResourceNotFoundException.class)
+                .hasMessage("Usuario no encontrado");
+
+        verify(repository).findById(99L);
+        verify(repository, never()).save(any(User.class));
+    }
 
     @Test
+    @DisplayName("Debe eliminar un usuario existente")
     void shouldDeleteUser() {
-        User user = User.builder()
-                .id(1L)
-                .build();
-
-        when(repository.findById(1L)).thenReturn(Optional.of(user));
+        when(repository.findById(1L))
+                .thenReturn(Optional.of(existingUser));
 
         service.delete(1L);
 
-        verify(repository, times(1)).delete(user);
+        verify(repository).findById(1L);
+        verify(repository).delete(existingUser);
     }
 
-    // ================= AUTH =================
+    @Test
+    @DisplayName("Debe lanzar una excepción al eliminar un usuario inexistente")
+    void shouldThrowWhenDeletingMissingUser() {
+        when(repository.findById(99L))
+                .thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> service.delete(99L))
+                .isInstanceOf(ResourceNotFoundException.class)
+                .hasMessage("Usuario no encontrado");
+
+        verify(repository).findById(99L);
+        verify(repository, never()).delete(any(User.class));
+    }
 
     @Test
-    void shouldFindAuthByEmail() {
-        User user = User.builder()
-                .email("test@test.com")
-                .password("pass")
-                .role("USER")
-                .build();
+    @DisplayName("Debe devolver los datos necesarios para autenticación")
+    void shouldFindAuthenticationDataByEmail() {
+        when(repository.findByEmail("sebastian@donaton.cl"))
+                .thenReturn(Optional.of(existingUser));
 
-        when(repository.findByEmail("test@test.com"))
-                .thenReturn(Optional.of(user));
+        UserAuthResponse response =
+                service.findAuthByEmail("sebastian@donaton.cl");
 
-        UserAuthResponse response = service.findAuthByEmail("test@test.com");
+        assertThat(response.email())
+                .isEqualTo("sebastian@donaton.cl");
+        assertThat(response.passwordHash())
+                .isEqualTo("encoded-password");
+        assertThat(response.role())
+                .isEqualTo("USER");
 
-        assertEquals("test@test.com", response.email());
+        verify(repository).findByEmail("sebastian@donaton.cl");
+    }
+
+    @Test
+    @DisplayName("Debe lanzar una excepción cuando no existen datos de autenticación")
+    void shouldThrowWhenAuthenticationUserDoesNotExist() {
+        when(repository.findByEmail("inexistente@donaton.cl"))
+                .thenReturn(Optional.empty());
+
+        assertThatThrownBy(
+                () -> service.findAuthByEmail("inexistente@donaton.cl")
+        )
+                .isInstanceOf(ResourceNotFoundException.class)
+                .hasMessage("Usuario no encontrado");
+
+        verify(repository)
+                .findByEmail("inexistente@donaton.cl");
     }
 }
